@@ -4,7 +4,7 @@
         <meta charset="UTF-8">
         
         <meta name="viewport"
-              content="width=device-width, inital-scale=1.0">
+              content="width=device-width, initial-scale=1.0">
         
         <title>Buat Laporan Baru</title>
          <style>
@@ -28,7 +28,10 @@
                 width: 100%;
             }
         </style>
+        <link rel="stylesheet"
+          href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/> 
     </head>
+       
     <body>
         <a href="Halaman_Utama.html">
             <- Kembali
@@ -36,48 +39,59 @@
         
         <h1>SILANDAK</h1>
         <H2>Form Pengaduan</H2>
-        <form>
+        <form action="/api/pengaduan/tambah"
+              method="post">
             <label>Nama Pelapor</label>
-            
             <br>
-            <input type="text">
+            <input type="text" name="nama_pelapor">
             
             <br><br>
             <label>No Telepon</label>
             <br>
-            <input type="text">
+            <input type="text" name="no_telepon">
             
             <br><br>
             <label>Alamat Pelapor</label>
             <br>
-            <input type="text">
+            <input type="text" name="alamat_pelapor">
             
             <br><br>
             <label>Deskripsi Kejadian</label>
-            
             <br>
-            <textarea rows="5" cols="40"></textarea>
+            <textarea rows="5" cols="40" name="deskripsi"></textarea>
+            
+            <label>Waktu Kejadian</label>
+            <br>
+            <input type="datetime-local"
+                   name="waktu_kejadian">
+            <br><br>
             
             <br><br>
             <label>Alamat</label>
-            
             <br>
-            <input type="text">
+            <input type="text" name="alamat_kejadian" size="50">
             
             <br><br>
-            <label>Klasifikasi</label>
-            <br>
-            
-            <select>
-                <option>Kebakaran</option>
-                <option>Penyelamatan Hewan</option>
-                <option>Bencana</option>
-                <option>Lainnya</option>
-            </select>
+            <div id="map"
+                 style="height:400px;width:100%;"></div>
+                 <br>
+                 <label>latitude</label>
+                 <br>
+                 <input type="text" id="latitude"
+                        name="latitude" readonly>
+                 <br><br>
+                 <label>longitude</label>
+                 <br>
+                 <input type="text" id="longitude"
+                        name="longitude" readonly>
+                 <br><br>
+                 <button type="button"
+                     onclick="ambilLokasi()">
+                             Gunakan Lokasi Saya
+                 </button>
             
             <br><br>
             <label>Upload Bukti</label>
-            
             <br>
             <input type="file">
             
@@ -86,5 +100,40 @@
                     Kirim Laporan
             </button>
         </form>
+        
+        <script
+        src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+        
+        <script>
+            var map = L.map('map').setView([-6.2,106.8],13);
+            L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png',{
+                maxZoom:19
+            }).addTo(map);
+            var marker;
+            map.on('click', function(e){
+                if(marker){
+                    map.removeLayer(marker);
+                }
+                marker = L.marker(e.latlng).addTo(map);
+                document.getElementById('latitude').value = e.latlng.lat;
+                document.getElementById('longitude').value = e.latlng.lng;
+            });
+            
+            function ambilLokasi(){
+                navigator.geolocation.getCurrentPosition(function(position){
+                    var lat = position.coords.latitude;
+                    var lng = position.coords.longitude;
+                    
+                    map.setView([lat,lng],16);
+                    if(marker){
+                        map.removeLayer(marker);
+                    }
+                    marker = L.marker([lat,lng]).addTo(map);
+                    
+                    document.getElementById('latitude').value = lat;
+                    document.getElementById('longitude').value = lng;
+                });
+            }
+        </script>
     </body>
 </html>
