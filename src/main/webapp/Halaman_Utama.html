@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        
+        <meta name="viewport"
+              content="width=device-widt,initial-scale=1.0">
+        
+        <title>SILANDAK</title>
+        
+        <style>
+            body{
+                font-family: Arial, sans-serif;
+                margin: 15px;
+            }
+            h1{
+                text-align: center;
+            }
+            p{
+                text-align: center;
+            }
+            button{
+                width: 100%;
+                padding: 15px;
+                margin-top: 10px;
+                border-radius: 10px;
+            }
+            table{
+                width: 100%;
+            }
+        </style>
+    </head>
+    <body>
+        <h1>SILANDAK</h1>
+        <p>Sistem Layanan dan Pengaduan Damkar</p>
+        
+        <a href="Buat_Laporan_Baru.html">
+            <button>
+                Buat Laporan Baru
+            </button>
+        </a>
+        <br><br>
+        
+        <a href="Cek_Status.html">
+            <button>
+                Cek Status Pengaduan
+            </button>
+        </a>
+        
+        <h2>Riwayat Pengaduan</h2>
+        <table border="1">
+            <thead>
+                <tr>
+                    <th>Pengaduan (klasifikasi)</th>
+                    <th>tanggal</th>
+                    <th>Kode Pengaduan</th>
+                    <th>Status Laporan</th>
+                </tr>
+            </thead>
+            <tbody id="tabelRiwayat">
+            <tr>
+                <td colspan="4" style="text-align: center">memuat data dari database...</td>
+            </tr>
+            </tbody>
+        </table>
+        <script>
+            document.addEventListener("DOMContentLoaded", function(){
+                fetch(`http://localhost:8080/api/pengaduan/riwayat`)
+                        .then(response => {
+                            if(!response.ok){
+                                throw new Error("Gagal Mengambil Data Dari Server");
+                            }
+                            return response.json();
+                })
+                        .then(data => {
+                            let tabel = document.getElementById("tabelRiwayat");
+                    tabel.innerHTML = "";
+                    
+                    data.forEach(p => {
+                        let baris = `<tr>
+                        <td>${p.klasifikasi}</td>
+                        <td>${p.waktu_kejadian}</td>
+                        <td>${p.kode_pengaduan}</td>
+                        <td><strong>${p.status}</strong></td>
+                </tr>`;
+                tabel.innerHTML += baris;
+                    });
+                })
+                        .catch(error=>{
+                            console.error("Error :", error);
+                });
+            });
+        </script>
+    </body>
+</html>
