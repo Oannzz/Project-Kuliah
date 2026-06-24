@@ -51,7 +51,8 @@
         <table border="1">
             <thead>
                 <tr>
-                    <th>Pengaduan (klasifikasi)</th>
+                    <th>deskripsi</th>
+                    <th>klasifikasi</th>
                     <th>tanggal</th>
                     <th>Kode Pengaduan</th>
                     <th>Status Laporan</th>
@@ -78,6 +79,7 @@
                     
                     data.forEach(p => {
                         let baris = `<tr>
+                        <td>${p.deskripsi}</td>
                         <td>${p.klasifikasi}</td>
                         <td>${p.waktu_kejadian}</td>
                         <td>${p.kode_pengaduan}</td>
