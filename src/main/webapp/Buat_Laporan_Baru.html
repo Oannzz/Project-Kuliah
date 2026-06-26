@@ -40,7 +40,8 @@
         <h1>SILANDAK</h1>
         <H2>Form Pengaduan</H2>
         <form action="/api/pengaduan/tambah"
-              method="post" onsubmit="return validasiForm();">
+              method="post" 
+              onsubmit="return validasiForm();">
             <label>Nama Pelapor</label>
             <br>
             <input type="text" name="nama_pelapor" required>
@@ -93,7 +94,10 @@
             <br><br>
             <label>Upload Bukti</label>
             <br>
-            <input type="file">
+            <input type="file" id="foto" accept="image/*" required>
+            <input type="hidden"
+                   id="foto_bukti"
+                   name="foto_bukti">
             
             <br><br>
             <button type="submit">
@@ -152,6 +156,8 @@
                         document.getElementById("latitude").value;
                 let lng =
                         document.getElementById("longitude").value;
+                let foto =
+                        document.getElementById("foto_bukti").value;
                 
                 if (nama.trim() === ""){
                     alert("Nama Pelapor Harus Di isi !");
@@ -166,8 +172,26 @@
                     alert("isi Alamat Kejadian Atau Pilih Lokasi Pada Peta !");
                     return false;
                 }
+                if(foto.trim() === ""){
+                    alert("Upload Bukti Harus Di Isi !");
+                    return false;
+                }
+                //Cek Converter base64
+                //alert(document.getElementById("foto_bukti").value.substring(0,50));
                 return true;
             }
+        </script>
+        
+        <script>
+            document.getElementById("foto").addEventListener("change", function(){
+                const file = this.files[0];
+                if(!file) return;
+                const reader = new FileReader();
+                reader.onload = function(e){
+                    document.getElementById("foto_bukti").value = e.target.result;
+                };
+                reader.readAsDataURL(file);
+            });
         </script>
     </body>
 </html>
