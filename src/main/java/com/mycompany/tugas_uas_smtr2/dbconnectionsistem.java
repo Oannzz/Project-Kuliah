@@ -42,34 +42,7 @@ public class dbconnectionsistem {
         }
         return koneksi;
     }
-    public static ImageIcon ambilGambarLangsung(String namaTabel, String namaKolomBlob, String kolomKunci, String nilaiKunci) {
-        String sql = "SELECT " + namaKolomBlob + " FROM " + namaTabel + " WHERE " + kolomKunci + " = ?";
-        String url = "jdbc:mysql://localhost:3306/silandak";
-        
-        try (Connection conn = DriverManager.getConnection(url, "root", "");
-             PreparedStatement ps = conn.prepareStatement(sql)) {
-            
-            ps.setString(1, nilaiKunci);
-            
-            try (ResultSet rs = ps.executeQuery()) {
-                if (rs.next()) {
-                    InputStream input = rs.getBinaryStream(namaKolomBlob);
-                    
-                    if (input != null) {
-                        // Membaca aliran biner database LANGSUNG menjadi objek gambar di memori RAM
-                        Image gambar = ImageIO.read(input);
-                        
-                        if (gambar != null) {
-                            return new ImageIcon(gambar); // Sukses jadi objek gambar GUI
-                        }
-                    }
-                }
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return null; // Kembalikan null jika gagal atau gambar kosong
-    }
+    
     
     
     

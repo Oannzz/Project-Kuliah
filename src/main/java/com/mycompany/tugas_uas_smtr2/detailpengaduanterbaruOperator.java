@@ -22,18 +22,7 @@ public class detailpengaduanterbaruOperator extends javax.swing.JFrame {
     public detailpengaduanterbaruOperator() {
     initComponents();
     ;
-    String kodePengaduan = field_kd.getText(); 
-    javax.swing.ImageIcon iconGambar = dbconnectionsistem.ambilGambarLangsung("form_pengaduan", "foto_bukti", "kode_pengaduan", kodePengaduan);
-
-    // 3. Tampilkan pada JLabel di frame operator
-    if (iconGambar != null) {
-        
-
-        lbl_foto.setIcon(iconGambar); // Ganti dengan nama variabel JLabel di halaman operator
-        } else {
-        lbl_foto.setText("Foto bukti tidak ditemukan");
-}
-}   
+    }   
 
     private String kodePengaduanData;
     private String deskripsiData;
@@ -54,16 +43,9 @@ public class detailpengaduanterbaruOperator extends javax.swing.JFrame {
         this.deskripsiData = deskripsi;
         this.alamatData = alamat;
         this.waktuData = waktuKejadian;
-        javax.swing.ImageIcon iconGambar = dbconnectionsistem.ambilGambarLangsung("form_pengaduan", "foto_bukti", "kode_pengaduan", kodePengaduan);
+        
 
-        if (iconGambar != null) {
-        java.awt.Image imgMentah = iconGambar.getImage();
-        // Lakukan scaling otomatis agar gambar pas dengan ukuran kotak JLabel
-        java.awt.Image imgDiubah = imgMentah.getScaledInstance(lbl_foto.getWidth(), lbl_foto.getHeight(), java.awt.Image.SCALE_SMOOTH);
-        lbl_foto.setIcon(new javax.swing.ImageIcon(imgDiubah));
-        } else {
-        lbl_foto.setText("Foto bukti tidak tersedia");
-    }
+        
 }
    
     

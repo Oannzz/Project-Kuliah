@@ -15,7 +15,8 @@ import javax.swing.JOptionPane;
  * @author MSI Modern
  */
 public class isilaporanhasilpenangananInstansi extends javax.swing.JFrame {
-    
+    private double currentLat;  
+    private double currentLng;
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(isilaporanhasilpenangananInstansi.class.getName());
 
     /**
@@ -54,11 +55,49 @@ public class isilaporanhasilpenangananInstansi extends javax.swing.JFrame {
         this.waktuData = waktuKejadian;
         
         this.idInstansiDinamis = idInstansi;
-        
-        
+        btn_lihat_lokasi.setEnabled(false);
+        javax.swing.SwingUtilities.invokeLater(() -> loadFotoAndMaps(kodePengaduan));
     }
-    
+        private void loadFotoAndMaps(String kodePengaduan) {
+    System.out.println("DEBUG - kodePengaduan masuk: " + kodePengaduan);
 
+    try {
+        // Buat koneksi baru langsung, jangan pakai try-with-resources
+        java.sql.Connection conn = java.sql.DriverManager.getConnection(
+            "jdbc:mysql://localhost:3306/silandak", "root", ""
+        );
+
+        String sql = "SELECT latitude, longitude FROM form_pengaduan WHERE kode_pengaduan = ?";
+        java.sql.PreparedStatement ps = conn.prepareStatement(sql);
+        ps.setString(1, kodePengaduan);
+        java.sql.ResultSet rs = ps.executeQuery();
+
+        if (rs.next()) {
+            double lat = rs.getDouble("latitude");
+            double lng = rs.getDouble("longitude");
+           
+
+            currentLat = lat;
+            currentLng = lng;
+            Util.tampilkanMapsPreview(lbl_maps, currentLat, currentLng);
+            btn_lihat_lokasi.setEnabled(true);
+        } else {
+            
+            lbl_maps.setText("Data tidak ditemukan");
+        }
+
+        rs.close();
+        ps.close();
+        conn.close(); // tutup manual di akhir
+
+    } catch (Exception e) {
+        System.out.println("DEBUG - Exception: " + e.getMessage());
+        e.printStackTrace();
+        lbl_maps.setText("Gagal memuat peta");
+        btn_lihat_lokasi.setEnabled(false);
+    }
+}
+        
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -76,12 +115,13 @@ public class isilaporanhasilpenangananInstansi extends javax.swing.JFrame {
         area_detail = new javax.swing.JTextArea();
         jLabel2 = new javax.swing.JLabel();
         btn_kirim = new javax.swing.JButton();
-        jButton2 = new javax.swing.JButton();
+        btn_lihat_lokasi = new javax.swing.JButton();
         jScrollPane3 = new javax.swing.JScrollPane();
         area_alamat = new javax.swing.JTextArea();
         jFileChooser1 = new javax.swing.JFileChooser();
         field_tgl = new javax.swing.JTextField();
         field_kd = new javax.swing.JTextField();
+        lbl_maps = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setMaximumSize(new java.awt.Dimension(1920, 1080));
@@ -94,6 +134,7 @@ public class isilaporanhasilpenangananInstansi extends javax.swing.JFrame {
         jLabel5.setText("Sistem Layanan Dan Pengaduan Damkar");
 
         jButton1.setText("< Kembali");
+        jButton1.addActionListener(this::jButton1ActionPerformed);
 
         jLabel7.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
         jLabel7.setText("Deskripsi Penanganan");
@@ -112,8 +153,9 @@ public class isilaporanhasilpenangananInstansi extends javax.swing.JFrame {
         btn_kirim.setText("KIRIM");
         btn_kirim.addActionListener(this::btn_kirimActionPerformed);
 
-        jButton2.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
-        jButton2.setText("Lihat Lokasi");
+        btn_lihat_lokasi.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
+        btn_lihat_lokasi.setText("Lihat Lokasi");
+        btn_lihat_lokasi.addActionListener(this::btn_lihat_lokasiActionPerformed);
 
         area_alamat.setColumns(20);
         area_alamat.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
@@ -128,6 +170,8 @@ public class isilaporanhasilpenangananInstansi extends javax.swing.JFrame {
 
         field_kd.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
 
+        lbl_maps.setPreferredSize(new java.awt.Dimension(300, 300));
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -135,12 +179,16 @@ public class isilaporanhasilpenangananInstansi extends javax.swing.JFrame {
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addGap(73, 73, 73)
                 .addComponent(jFileChooser1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addGap(274, 274, 274)
+                .addComponent(btn_lihat_lokasi)
+                .addGap(234, 234, 234)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(jLabel2)
                         .addGap(259, 259, 259))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                    .addGroup(layout.createSequentialGroup()
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(btn_kirim, javax.swing.GroupLayout.PREFERRED_SIZE, 98, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(254, 254, 254))))
             .addGroup(layout.createSequentialGroup()
@@ -157,9 +205,9 @@ public class isilaporanhasilpenangananInstansi extends javax.swing.JFrame {
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jScrollPane1)
                             .addGroup(layout.createSequentialGroup()
-                                .addGap(0, 901, Short.MAX_VALUE)
-                                .addComponent(jButton2)
-                                .addGap(328, 328, 328)
+                                .addGap(0, 0, Short.MAX_VALUE)
+                                .addComponent(lbl_maps, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(244, 244, 244)
                                 .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 423, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(31, 31, 31))
                             .addGroup(layout.createSequentialGroup()
@@ -194,24 +242,26 @@ public class isilaporanhasilpenangananInstansi extends javax.swing.JFrame {
                         .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 331, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(layout.createSequentialGroup()
+                                .addGap(90, 90, 90)
+                                .addComponent(jFileChooser1, javax.swing.GroupLayout.PREFERRED_SIZE, 421, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addContainerGap(69, Short.MAX_VALUE))
+                            .addGroup(layout.createSequentialGroup()
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                 .addComponent(jLabel2)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addGroup(layout.createSequentialGroup()
-                                        .addGap(125, 125, 125)
-                                        .addComponent(jButton2))
-                                    .addGroup(layout.createSequentialGroup()
-                                        .addGap(26, 26, 26)
-                                        .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 243, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                .addGap(26, 26, 26)
+                                .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 243, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(32, 32, 32)
-                                .addComponent(btn_kirim))
-                            .addGroup(layout.createSequentialGroup()
-                                .addGap(90, 90, 90)
-                                .addComponent(jFileChooser1, javax.swing.GroupLayout.PREFERRED_SIZE, 421, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                        .addContainerGap(69, Short.MAX_VALUE))
+                                .addComponent(btn_kirim)
+                                .addContainerGap(201, Short.MAX_VALUE))
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(lbl_maps, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(38, 38, 38)
+                                .addComponent(btn_lihat_lokasi)
+                                .addGap(94, 94, 94))))
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(field_tgl, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                        .addContainerGap())))
         );
 
         pack();
@@ -224,7 +274,7 @@ public class isilaporanhasilpenangananInstansi extends javax.swing.JFrame {
 
     private void btn_kirimActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_kirimActionPerformed
         // TODO add your handling code here:
-        System.out.println("DEBUG idInstansiDinamis = " + this.idInstansiDinamis);
+        
     // 1. Ambil data teks dari GUI
     String kodePengaduan = field_kd.getText();          // Contoh: "EMR-0001" atau "NEM-0001"
     String tglLaporan = field_tgl.getText();            
@@ -241,10 +291,36 @@ public class isilaporanhasilpenangananInstansi extends javax.swing.JFrame {
         javax.swing.JOptionPane.showMessageDialog(null, "Silakan pilih file gambar PNG terlebih dahulu!");
         return; 
     }
-
+       // Sudah dibahas sebelumnya — tambahkan prefix sebelum simpan ke DB
+    String base64Gambar = "";
+try {
+    byte[] fileBytes = java.nio.file.Files.readAllBytes(fileGambar.toPath());
+    String base64Raw = java.util.Base64.getEncoder().encodeToString(fileBytes);
+    
+    // Deteksi MIME type dari ekstensi file
+    String namaFile = fileGambar.getName().toLowerCase();
+    String mimeType;
+    if (namaFile.endsWith(".png")) {
+        mimeType = "image/png";
+    } else if (namaFile.endsWith(".jpg") || namaFile.endsWith(".jpeg")) {
+        mimeType = "image/jpeg";
+    } else {
+        mimeType = "image/png"; // default
+    }
+    
+    // Gabungkan prefix + Base64
+    base64Gambar = "data:" + mimeType + ";base64," + base64Raw;
+    
+} catch (java.io.IOException ex) {
+    ex.printStackTrace();
+    javax.swing.JOptionPane.showMessageDialog(this,
+        "Gagal membaca file gambar: " + ex.getMessage(), "Error",
+        javax.swing.JOptionPane.ERROR_MESSAGE);
+    return;
+}
     String url = "jdbc:mysql://localhost:3306/silandak";
     String kodeLaporanOtomatis = "";
-
+    
     try {
         java.sql.Connection conn = java.sql.DriverManager.getConnection(url, "root", "");
         
@@ -285,10 +361,10 @@ public class isilaporanhasilpenangananInstansi extends javax.swing.JFrame {
         psInsert.setInt(4, idOperatorLogedIn);      
         psInsert.setString(5, deskripsiPenanganan); 
         psInsert.setString(6, alamat);              
-        psInsert.setString(7, tglLaporan);          
+        psInsert.setString(7, tglLaporan);
+        psInsert.setString(8, base64Gambar);
         
-        java.io.FileInputStream fis = new java.io.FileInputStream(fileGambar);
-        psInsert.setBinaryStream(8, fis, (int) fileGambar.length());
+        
         
         int rows = psInsert.executeUpdate();
         if (rows > 0) {
@@ -306,7 +382,7 @@ public class isilaporanhasilpenangananInstansi extends javax.swing.JFrame {
         }
         
         psInsert.close();
-        fis.close();
+        
         conn.close();
         
     } catch (Exception e) {
@@ -325,6 +401,23 @@ public class isilaporanhasilpenangananInstansi extends javax.swing.JFrame {
    
 
     }//GEN-LAST:event_btn_kirimActionPerformed
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        // TODO add your handling code here:
+        DetailPengaduanTerbaruInstansi keluar = new DetailPengaduanTerbaruInstansi();
+        keluar.setVisible(true);
+        this.dispose();
+    }//GEN-LAST:event_jButton1ActionPerformed
+
+    private void btn_lihat_lokasiActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_lihat_lokasiActionPerformed
+        btn_lihat_lokasi.addActionListener(e -> {
+        Util.bukaMapsDiBrowser(
+        String.format(java.util.Locale.US,
+            "https://www.google.com/maps?q=%f,%f", 
+            currentLat, currentLng)
+    );
+});        // TODO add your handling code here:
+    }//GEN-LAST:event_btn_lihat_lokasiActionPerformed
 
     /**
      * @param args the command line arguments
@@ -355,10 +448,10 @@ public class isilaporanhasilpenangananInstansi extends javax.swing.JFrame {
     private javax.swing.JTextArea area_alamat;
     private javax.swing.JTextArea area_detail;
     private javax.swing.JButton btn_kirim;
+    private javax.swing.JButton btn_lihat_lokasi;
     private javax.swing.JTextField field_kd;
     private javax.swing.JTextField field_tgl;
     private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
     private javax.swing.JFileChooser jFileChooser1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel4;
@@ -366,5 +459,6 @@ public class isilaporanhasilpenangananInstansi extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel7;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane3;
+    private javax.swing.JLabel lbl_maps;
     // End of variables declaration//GEN-END:variables
 }

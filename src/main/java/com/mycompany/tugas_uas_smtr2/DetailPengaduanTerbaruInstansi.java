@@ -10,6 +10,8 @@ package com.mycompany.tugas_uas_smtr2;
  */
 public class DetailPengaduanTerbaruInstansi extends javax.swing.JFrame {
     private int idInstansiDinamis;
+    private double currentLat;  
+    private double currentLng;
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(DetailPengaduanTerbaruInstansi.class.getName());
 
     /**
@@ -17,18 +19,7 @@ public class DetailPengaduanTerbaruInstansi extends javax.swing.JFrame {
      */
     public DetailPengaduanTerbaruInstansi() {
         initComponents();
-        // Ambil kode pengaduan yang sedang dibuka (Contoh: "EMR-0001")
-    String kodePengaduan = field_kode.getText(); 
-    javax.swing.ImageIcon iconGambar = dbconnectionsistem.ambilGambarLangsung("form_pengaduan", "foto_bukti", "kode_pengaduan", kodePengaduan);
-
-    // 3. Set ke JLabel foto bukti kamu
-    if (iconGambar != null) {
-        
-
-    lbl_foto.setIcon(iconGambar); // Ganti lbl_foto dengan nama variabel JLabel tempat gambarmu
-    } else {
-    lbl_foto.setText("Foto bukti tidak tersedia");
-}
+       
     }    
     
     private String kodePengaduanData;
@@ -54,18 +45,90 @@ public class DetailPengaduanTerbaruInstansi extends javax.swing.JFrame {
         this.waktuData = waktuKejadian;
         
         this.idInstansiDinamis = idIns;
-        javax.swing.ImageIcon iconGambar = dbconnectionsistem.ambilGambarLangsung("form_pengaduan", "foto_bukti", "kode_pengaduan", kodePengaduan);
+        
+        btn_lihat_lokasi.setEnabled(false);
+        loadFotoPengaduan(kodePengaduan);
+        javax.swing.SwingUtilities.invokeLater(() -> loadFotoAndMaps(kodePengaduan));
+}
+    private void loadFotoPengaduan(String kodePengaduan) {
+    try  {
+            // Buat koneksi BARU, jangan pakai getKoneksi() yang shared
+            java.sql.Connection conn = java.sql.DriverManager.getConnection(
+                    "jdbc:mysql://127.0.0.1:3306/silandak", "root", ""
+            );
 
-        if (iconGambar != null) {
-        java.awt.Image imgMentah = iconGambar.getImage();
-        // Lakukan scaling otomatis agar gambar pas dengan ukuran kotak JLabel
-        java.awt.Image imgDiubah = imgMentah.getScaledInstance(lbl_foto.getWidth(), lbl_foto.getHeight(), java.awt.Image.SCALE_SMOOTH);
-        lbl_foto.setIcon(new javax.swing.ImageIcon(imgDiubah));
-        } else {
-        lbl_foto.setText("Foto bukti tidak tersedia");
-    }
+            String sql = "SELECT foto_bukti FROM form_pengaduan WHERE kode_pengaduan = ?";
+            java.sql.PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setString(1, kodePengaduan);
+            java.sql.ResultSet rs = ps.executeQuery();
+
+            if (rs.next()) {
+                String base64Data = rs.getString("foto_bukti");
+                System.out.println("Data foto: " + (base64Data != null ? base64Data.substring(0, 30) : "NULL"));
+
+                if (base64Data != null && base64Data.startsWith("data:image")) {
+                    String base64 = base64Data.substring(base64Data.indexOf(",") + 1);
+                    byte[] imageBytes = java.util.Base64.getDecoder().decode(base64);
+                    java.awt.image.BufferedImage img = javax.imageio.ImageIO.read(
+                            new java.io.ByteArrayInputStream(imageBytes)
+                    );
+                    if (img != null) {
+                        java.awt.Image scaled = img.getScaledInstance(300, 250, java.awt.Image.SCALE_SMOOTH);
+                        lbl_foto.setIcon(new javax.swing.ImageIcon(scaled));
+                        lbl_foto.setText("");
+                    } else {
+                        lbl_foto.setText("Gambar rusak");
+                    }
+                } else {
+                    lbl_foto.setText("Foto tidak tersedia");
+                }
+            } else {
+                lbl_foto.setText("Data tidak ditemukan");
+            }
+            rs.close();
+            ps.close();
+            conn.close(); // tutup koneksi baru ini
+
+        } catch (Exception e) {
+            lbl_foto.setText("Error: " + e.getMessage());
+            System.out.println("ERROR loadFotoBukti: " + e.getMessage());
+            e.printStackTrace();
+        }
+        
         
 }
+    private void loadFotoAndMaps(String kodePengaduan){
+    try (java.sql.Connection conn = dbconnectionsistem.getKoneksi()) {
+
+        String sql = "SELECT foto_bukti, latitude, longitude FROM form_pengaduan WHERE kode_pengaduan = ?";
+        java.sql.PreparedStatement ps = conn.prepareStatement(sql);
+        ps.setString(1, kodePengaduan);
+        java.sql.ResultSet rs = ps.executeQuery();
+
+        if (rs.next()) {
+            
+
+            currentLat = rs.getDouble("latitude");   // ← simpan ke field
+            currentLng = rs.getDouble("longitude");  // ← simpan ke field
+
+            Util.tampilkanMapsPreview(lbl_maps, currentLat, currentLng);
+
+            // Aktifkan tombol setelah data tersedia
+            btn_lihat_lokasi.setEnabled(true);
+        }
+
+    } catch (Exception e) {
+        e.printStackTrace();
+        btn_lihat_lokasi.setEnabled(false);
+    }
+}
+    
+    
+    
+    
+    
+    
+    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -84,12 +147,13 @@ public class DetailPengaduanTerbaruInstansi extends javax.swing.JFrame {
         jPanel1 = new javax.swing.JPanel();
         lbl_foto = new javax.swing.JLabel();
         jPanel2 = new javax.swing.JPanel();
-        jButton2 = new javax.swing.JButton();
+        btn_lihat_lokasi = new javax.swing.JButton();
         jLabel6 = new javax.swing.JLabel();
         jLabel8 = new javax.swing.JLabel();
         jLabel9 = new javax.swing.JLabel();
         jScrollPane2 = new javax.swing.JScrollPane();
         area_alamat = new javax.swing.JTextArea();
+        lbl_maps = new javax.swing.JLabel();
         jButton3 = new javax.swing.JButton();
         jLabel10 = new javax.swing.JLabel();
         field_kode = new javax.swing.JTextField();
@@ -107,6 +171,7 @@ public class DetailPengaduanTerbaruInstansi extends javax.swing.JFrame {
 
         jButton1.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
         jButton1.setText("Kembali");
+        jButton1.addActionListener(this::jButton1ActionPerformed);
 
         jLabel4.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
         jLabel4.setText("Deskripsi Pengaduan");
@@ -139,8 +204,9 @@ public class DetailPengaduanTerbaruInstansi extends javax.swing.JFrame {
 
         jPanel2.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
 
-        jButton2.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
-        jButton2.setText("Lihat Lokasi");
+        btn_lihat_lokasi.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
+        btn_lihat_lokasi.setText("Lihat Lokasi");
+        btn_lihat_lokasi.addActionListener(this::btn_lihat_lokasiActionPerformed);
 
         jLabel6.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
         jLabel6.setText("Alamat");
@@ -158,44 +224,53 @@ public class DetailPengaduanTerbaruInstansi extends javax.swing.JFrame {
         area_alamat.setWrapStyleWord(true);
         jScrollPane2.setViewportView(area_alamat);
 
+        lbl_maps.setPreferredSize(new java.awt.Dimension(300, 300));
+
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel2Layout.createSequentialGroup()
-                .addGap(44, 44, 44)
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel8)
-                    .addComponent(jLabel9))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
-                .addGap(0, 36, Short.MAX_VALUE)
+                .addContainerGap(36, Short.MAX_VALUE)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
                         .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 333, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(21, 21, 21))
+                        .addGap(24, 24, 24))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
                         .addComponent(jLabel6)
-                        .addGap(154, 154, 154))))
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jButton2)
-                .addGap(116, 116, 116))
+                        .addGap(163, 163, 163))))
+            .addGroup(jPanel2Layout.createSequentialGroup()
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addGap(44, 44, 44)
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel8)
+                            .addComponent(jLabel9)))
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addGap(125, 125, 125)
+                        .addComponent(btn_lihat_lokasi)))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addGroup(jPanel2Layout.createSequentialGroup()
+                .addGap(45, 45, 45)
+                .addComponent(lbl_maps, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, Short.MAX_VALUE))
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jButton2)
+                .addGap(51, 51, 51)
+                .addComponent(lbl_maps, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(btn_lihat_lokasi)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jLabel6)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGap(18, 18, 18)
                 .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 215, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(35, 35, 35)
+                .addGap(18, 18, 18)
                 .addComponent(jLabel8)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jLabel9)
-                .addGap(56, 56, 56))
+                .addGap(35, 35, 35))
         );
 
         jButton3.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
@@ -247,7 +322,7 @@ public class DetailPengaduanTerbaruInstansi extends javax.swing.JFrame {
                 .addComponent(jScrollPane1)
                 .addGap(18, 18, 18)
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(700, 700, 700))
+                .addGap(709, 709, 709))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -319,6 +394,24 @@ public class DetailPengaduanTerbaruInstansi extends javax.swing.JFrame {
         
     }//GEN-LAST:event_jButton3ActionPerformed
 
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        // TODO add your handling code here:
+        DasborInstansi1 keluar = new DasborInstansi1( idInstansiDinamis);
+        keluar.setVisible(true);
+        this.dispose();
+    }//GEN-LAST:event_jButton1ActionPerformed
+
+    private void btn_lihat_lokasiActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_lihat_lokasiActionPerformed
+        // TODO add your handling code here:
+        btn_lihat_lokasi.addActionListener(e -> {
+        Util.bukaMapsDiBrowser(
+        String.format(java.util.Locale.US,
+            "https://www.google.com/maps?q=%f,%f", 
+            currentLat, currentLng)
+    );
+});
+    }//GEN-LAST:event_btn_lihat_lokasiActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -347,10 +440,10 @@ public class DetailPengaduanTerbaruInstansi extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JTextArea area_alamat;
     private javax.swing.JTextArea area_detail;
+    private javax.swing.JButton btn_lihat_lokasi;
     private javax.swing.JTextField field_kode;
     private javax.swing.JTextField field_tgl;
     private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton3;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
@@ -364,5 +457,6 @@ public class DetailPengaduanTerbaruInstansi extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JLabel lbl_foto;
+    private javax.swing.JLabel lbl_maps;
     // End of variables declaration//GEN-END:variables
 }
