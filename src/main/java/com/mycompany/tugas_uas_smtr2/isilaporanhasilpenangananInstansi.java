@@ -36,9 +36,11 @@ public class isilaporanhasilpenangananInstansi extends javax.swing.JFrame {
 
 // TAMBAHKAN INI: Untuk menampung path file pilihan JFileChooser sebelum dikirim
         private String pathFileTerpilih = null;
+       
+        private int idInstansiDinamis;
 
          public isilaporanhasilpenangananInstansi(String kodePengaduan, String deskripsi, String alamat,
-                       String waktuKejadian
+                       String waktuKejadian, int idInstansi
                        ) {
         initComponents();
         field_kd.setText(kodePengaduan);
@@ -50,6 +52,10 @@ public class isilaporanhasilpenangananInstansi extends javax.swing.JFrame {
         this.deskripsiData = deskripsi;
         this.alamatData = alamat;
         this.waktuData = waktuKejadian;
+        
+        this.idInstansiDinamis = idInstansi;
+        
+        
     }
     
 
@@ -71,7 +77,6 @@ public class isilaporanhasilpenangananInstansi extends javax.swing.JFrame {
         jLabel2 = new javax.swing.JLabel();
         btn_kirim = new javax.swing.JButton();
         jButton2 = new javax.swing.JButton();
-        jPanel4 = new javax.swing.JPanel();
         jScrollPane3 = new javax.swing.JScrollPane();
         area_alamat = new javax.swing.JTextArea();
         jFileChooser1 = new javax.swing.JFileChooser();
@@ -82,9 +87,10 @@ public class isilaporanhasilpenangananInstansi extends javax.swing.JFrame {
         setMaximumSize(new java.awt.Dimension(1920, 1080));
         setMinimumSize(new java.awt.Dimension(1920, 1080));
 
-        jLabel4.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
+        jLabel4.setFont(new java.awt.Font("Segoe UI", 1, 36)); // NOI18N
         jLabel4.setText("SILANDAK");
 
+        jLabel5.setFont(new java.awt.Font("sansserif", 0, 14)); // NOI18N
         jLabel5.setText("Sistem Layanan Dan Pengaduan Damkar");
 
         jButton1.setText("< Kembali");
@@ -108,17 +114,6 @@ public class isilaporanhasilpenangananInstansi extends javax.swing.JFrame {
 
         jButton2.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
         jButton2.setText("Lihat Lokasi");
-
-        javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
-        jPanel4.setLayout(jPanel4Layout);
-        jPanel4Layout.setHorizontalGroup(
-            jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 740, Short.MAX_VALUE)
-        );
-        jPanel4Layout.setVerticalGroup(
-            jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 30, Short.MAX_VALUE)
-        );
 
         area_alamat.setColumns(20);
         area_alamat.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
@@ -149,71 +144,74 @@ public class isilaporanhasilpenangananInstansi extends javax.swing.JFrame {
                         .addComponent(btn_kirim, javax.swing.GroupLayout.PREFERRED_SIZE, 98, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(254, 254, 254))))
             .addGroup(layout.createSequentialGroup()
+                .addGap(31, 31, 31)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(350, 350, 350)
-                        .addComponent(jLabel5))
+                        .addComponent(jButton1)
+                        .addGap(695, 695, 695)
+                        .addComponent(jLabel4)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(jLabel5)
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(250, 250, 250)
-                        .addComponent(jLabel4))
-                    .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(6, 6, 6)
-                        .addComponent(jButton1))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(31, 31, 31)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jScrollPane1)
                             .addGroup(layout.createSequentialGroup()
-                                .addGap(0, 889, Short.MAX_VALUE)
+                                .addGap(0, 901, Short.MAX_VALUE)
                                 .addComponent(jButton2)
-                                .addGap(334, 334, 334)
+                                .addGap(328, 328, 328)
                                 .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 423, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(31, 31, 31))
-                            .addComponent(field_kd, javax.swing.GroupLayout.PREFERRED_SIZE, 170, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addGroup(layout.createSequentialGroup()
-                                .addComponent(jLabel7)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(field_tgl, javax.swing.GroupLayout.PREFERRED_SIZE, 270, javax.swing.GroupLayout.PREFERRED_SIZE)))))
-                .addGap(59, 59, 59))
+                                .addComponent(field_kd, javax.swing.GroupLayout.PREFERRED_SIZE, 170, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(0, 0, Short.MAX_VALUE)))
+                        .addGap(59, 59, 59))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jLabel7)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(field_tgl, javax.swing.GroupLayout.PREFERRED_SIZE, 270, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(70, 70, 70))))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(111, 111, 111)
-                        .addComponent(field_tgl, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 331, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jLabel2)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(layout.createSequentialGroup()
-                                .addGap(125, 125, 125)
-                                .addComponent(jButton2))
-                            .addGroup(layout.createSequentialGroup()
-                                .addGap(26, 26, 26)
-                                .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 243, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                        .addGap(32, 32, 32)
-                        .addComponent(btn_kirim))
-                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(layout.createSequentialGroup()
-                                .addGap(10, 10, 10)
-                                .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(18, 18, 18)
+                        .addComponent(jButton1))
+                    .addGroup(layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel4)
-                            .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addGroup(layout.createSequentialGroup()
-                                .addGap(4, 4, 4)
-                                .addComponent(jButton1)))
-                        .addGap(38, 38, 38)
-                        .addComponent(field_kd, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                            .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                .addGap(33, 33, 33)
+                .addComponent(field_kd, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
                         .addComponent(jLabel7)
-                        .addGap(427, 427, 427)
-                        .addComponent(jFileChooser1, javax.swing.GroupLayout.PREFERRED_SIZE, 421, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(88, Short.MAX_VALUE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 331, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(jLabel2)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addGap(125, 125, 125)
+                                        .addComponent(jButton2))
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addGap(26, 26, 26)
+                                        .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 243, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                .addGap(32, 32, 32)
+                                .addComponent(btn_kirim))
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(90, 90, 90)
+                                .addComponent(jFileChooser1, javax.swing.GroupLayout.PREFERRED_SIZE, 421, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addContainerGap(69, Short.MAX_VALUE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(field_tgl, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
         );
 
         pack();
@@ -226,7 +224,7 @@ public class isilaporanhasilpenangananInstansi extends javax.swing.JFrame {
 
     private void btn_kirimActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_kirimActionPerformed
         // TODO add your handling code here:
-        
+        System.out.println("DEBUG idInstansiDinamis = " + this.idInstansiDinamis);
     // 1. Ambil data teks dari GUI
     String kodePengaduan = field_kd.getText();          // Contoh: "EMR-0001" atau "NEM-0001"
     String tglLaporan = field_tgl.getText();            
@@ -234,7 +232,7 @@ public class isilaporanhasilpenangananInstansi extends javax.swing.JFrame {
     String alamat = area_alamat.getText();
 
     // Sementara di-hardcode 1 karena belum ada Session Login
-    int idInstansiLogedIn = 1; 
+    int idInstansi = this.idInstansiDinamis; 
     int idOperatorLogedIn = 1; 
 
     // 2. Ambil file dari JFileChooser
@@ -270,26 +268,7 @@ public class isilaporanhasilpenangananInstansi extends javax.swing.JFrame {
         psCekKla.close();
 
         // Cari ID Terakhir untuk nomor urut kode laporan baru
-        String sqlCekId = "SELECT MAX(id_laporan) AS max_id FROM laporan_penanganan";
-        java.sql.PreparedStatement psCekId = conn.prepareStatement(sqlCekId);
-        java.sql.ResultSet rsCekId = psCekId.executeQuery();
         
-        int nextId = 1;
-        if (rsCekId.next()) {
-            nextId = rsCekId.getInt("max_id") + 1;
-        }
-        rsCekId.close();
-        psCekId.close();
-        
-        // Format angka urutan menjadi 5 digit (contoh: 00003)
-        String nomorUrut = String.format("%04d", nextId);
-
-        // Menentukan prefix/awalan berdasarkan hasil klasifikasi database
-        if (jenisKlasifikasi.equalsIgnoreCase("emergency")) {
-            kodeLaporanOtomatis = "EMR-" + nomorUrut;
-        } else {
-            kodeLaporanOtomatis = "NEM-" + nomorUrut;
-        }
         // =======================================================================
 
         
@@ -302,7 +281,7 @@ public class isilaporanhasilpenangananInstansi extends javax.swing.JFrame {
         
         psInsert.setString(1, kodeLaporanOtomatis); 
         psInsert.setString(2, kodePengaduan);       
-        psInsert.setInt(3, idInstansiLogedIn);      
+        psInsert.setInt(3, idInstansiDinamis);      
         psInsert.setInt(4, idOperatorLogedIn);      
         psInsert.setString(5, deskripsiPenanganan); 
         psInsert.setString(6, alamat);              
@@ -313,9 +292,17 @@ public class isilaporanhasilpenangananInstansi extends javax.swing.JFrame {
         
         int rows = psInsert.executeUpdate();
         if (rows > 0) {
+            String sqlUpdate = "UPDATE form_pengaduan SET status = 'selesai' WHERE kode_pengaduan = ?";
+            java.sql.PreparedStatement psUpdate = conn.prepareStatement(sqlUpdate);
+            psUpdate.setString(1, kodePengaduan);
+            psUpdate.executeUpdate();
+            psUpdate.close();
             javax.swing.JOptionPane.showMessageDialog(null, 
                 "Laporan berhasil dikirim!\nKode Laporan Baru: " + kodeLaporanOtomatis);
             area_detail.setText("");
+             area_alamat.setText("");
+            jFileChooser1.setSelectedFile(null);
+            this.dispose(); // tutup form setelah sukses
         }
         
         psInsert.close();
@@ -377,7 +364,6 @@ public class isilaporanhasilpenangananInstansi extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel7;
-    private javax.swing.JPanel jPanel4;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane3;
     // End of variables declaration//GEN-END:variables

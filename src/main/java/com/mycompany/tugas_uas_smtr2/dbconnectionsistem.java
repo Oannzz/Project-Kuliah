@@ -4,6 +4,7 @@
  */
 package com.mycompany.tugas_uas_smtr2;
 
+import java.awt.Image;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.InputStream;
@@ -12,6 +13,8 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import javax.imageio.ImageIO;
+import javax.swing.ImageIcon;
 
 /**
  *
@@ -39,7 +42,7 @@ public class dbconnectionsistem {
         }
         return koneksi;
     }
-    public static void unduhBlobKePng(String namaTabel, String namaKolomBlob, String kolomKunci, String nilaiKunci, String namaFileTarget) {
+    public static ImageIcon ambilGambarLangsung(String namaTabel, String namaKolomBlob, String kolomKunci, String nilaiKunci) {
         String sql = "SELECT " + namaKolomBlob + " FROM " + namaTabel + " WHERE " + kolomKunci + " = ?";
         String url = "jdbc:mysql://localhost:3306/silandak";
         
@@ -53,23 +56,19 @@ public class dbconnectionsistem {
                     InputStream input = rs.getBinaryStream(namaKolomBlob);
                     
                     if (input != null) {
-                        File fileOutput = new File(namaFileTarget);
-                        try (FileOutputStream output = new FileOutputStream(fileOutput)) {
-                            byte[] buffer = new byte[1024];
-                            int bytesRead;
-                            while ((bytesRead = input.read(buffer)) != -1) {
-                                output.write(buffer, 0, bytesRead);
-                            }
+                        // Membaca aliran biner database LANGSUNG menjadi objek gambar di memori RAM
+                        Image gambar = ImageIO.read(input);
+                        
+                        if (gambar != null) {
+                            return new ImageIcon(gambar); // Sukses jadi objek gambar GUI
                         }
-                        System.out.println("Gambar berhasil dimuat sementara: " + fileOutput.getAbsolutePath());
-                    } else {
-                        System.out.println("Kolom blob kosong di database.");
                     }
                 }
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
+        return null; // Kembalikan null jika gagal atau gambar kosong
     }
     
     

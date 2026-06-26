@@ -17,13 +17,17 @@ import javax.swing.table.DefaultTableModel;
  */
 public class DasborInstansi1 extends javax.swing.JFrame {
 
+    private int idInstansiDinamis;
+    
+    
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(DasborInstansi1.class.getName());
 
     /**
      * Creates new form DasborInstansi1
      */
-    public DasborInstansi1() {
+    public DasborInstansi1(int idInstansiDinamis) {
         initComponents();
+        this.idInstansiDinamis = idInstansiDinamis;
         setLocationRelativeTo(null);
         setExtendedState(javax.swing.JFrame.MAXIMIZED_BOTH);
         loadPengaduanTerbaru();
@@ -53,8 +57,7 @@ public class DasborInstansi1 extends javax.swing.JFrame {
                 dispose();
             }
         });
-
-    }
+            }
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -408,7 +411,8 @@ public class DasborInstansi1 extends javax.swing.JFrame {
                 rs.getString("kode_pengaduan"),
                 rs.getString("deskripsi"),
                 rs.getString("alamat_kejadian"),
-                rs.getTimestamp("waktu_kejadian").toString()
+                rs.getTimestamp("waktu_kejadian").toString(),
+                this.idInstansiDinamis
             );
             detail.setVisible(true);
         }
@@ -692,7 +696,7 @@ class KodeWithButtonEditor extends javax.swing.DefaultCellEditor {
          * @param args the command line arguments
          */
         java.awt.EventQueue.invokeLater(
-                () -> new DasborInstansi1().setVisible(true));
+                () -> new DasborInstansi1(0).setVisible(true));
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

@@ -9,7 +9,7 @@ package com.mycompany.tugas_uas_smtr2;
  * @author MSI Modern
  */
 public class DetailPengaduanTerbaruInstansi extends javax.swing.JFrame {
-    
+    private int idInstansiDinamis;
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(DetailPengaduanTerbaruInstansi.class.getName());
 
     /**
@@ -19,24 +19,28 @@ public class DetailPengaduanTerbaruInstansi extends javax.swing.JFrame {
         initComponents();
         // Ambil kode pengaduan yang sedang dibuka (Contoh: "EMR-0001")
     String kodePengaduan = field_kode.getText(); 
-    String namaFileHasil = "temp_pengaduan_instansi_" + kodePengaduan + ".png";
+    javax.swing.ImageIcon iconGambar = dbconnectionsistem.ambilGambarLangsung("form_pengaduan", "foto_bukti", "kode_pengaduan", kodePengaduan);
 
-// Ambil dari form_pengaduan -> kolom foto_bukti
-    dbconnectionsistem.unduhBlobKePng("form_pengaduan", "foto_bukti", "kode_pengaduan", kodePengaduan, namaFileHasil);
-    // Tampilkan file hasil download tadi ke dalam komponen JLabel bernama lbl_foto
-    java.io.File fileGambar = new java.io.File(namaFileHasil);
-    if(fileGambar.exists()){
-    lbl_foto.setIcon(new javax.swing.ImageIcon(namaFileHasil));
+    // 3. Set ke JLabel foto bukti kamu
+    if (iconGambar != null) {
+        
+
+    lbl_foto.setIcon(iconGambar); // Ganti lbl_foto dengan nama variabel JLabel tempat gambarmu
+    } else {
+    lbl_foto.setText("Foto bukti tidak tersedia");
 }
-    }
+    }    
+    
     private String kodePengaduanData;
     private String deskripsiData;
     private String alamatData;
     private String waktuData;
     
+   
+    
     
     public DetailPengaduanTerbaruInstansi(String kodePengaduan, String deskripsi, String alamat,
-                       String waktuKejadian
+                       String waktuKejadian, int idIns
                        ) {
         initComponents();
         field_kode.setText(kodePengaduan);
@@ -48,7 +52,20 @@ public class DetailPengaduanTerbaruInstansi extends javax.swing.JFrame {
         this.deskripsiData = deskripsi;
         this.alamatData = alamat;
         this.waktuData = waktuKejadian;
+        
+        this.idInstansiDinamis = idIns;
+        javax.swing.ImageIcon iconGambar = dbconnectionsistem.ambilGambarLangsung("form_pengaduan", "foto_bukti", "kode_pengaduan", kodePengaduan);
+
+        if (iconGambar != null) {
+        java.awt.Image imgMentah = iconGambar.getImage();
+        // Lakukan scaling otomatis agar gambar pas dengan ukuran kotak JLabel
+        java.awt.Image imgDiubah = imgMentah.getScaledInstance(lbl_foto.getWidth(), lbl_foto.getHeight(), java.awt.Image.SCALE_SMOOTH);
+        lbl_foto.setIcon(new javax.swing.ImageIcon(imgDiubah));
+        } else {
+        lbl_foto.setText("Foto bukti tidak tersedia");
     }
+        
+}
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -289,9 +306,10 @@ public class DetailPengaduanTerbaruInstansi extends javax.swing.JFrame {
         String waktuData = field_tgl.getText();
         
         
+        int idInstansi = this.idInstansiDinamis;
         
         
-        isilaporanhasilpenangananInstansi detailForm = new isilaporanhasilpenangananInstansi(kodePengaduanData, deskripsiData, alamatData, waktuData); // Ganti dengan nama class Frame tujuanmu
+        isilaporanhasilpenangananInstansi detailForm = new isilaporanhasilpenangananInstansi(kodePengaduanData, deskripsiData, alamatData, waktuData, idInstansi); // Ganti dengan nama class Frame tujuanmu
 
 // 2. Tampilkan halaman tujuan tersebut ke layar
     detailForm.setVisible(true);
