@@ -22,25 +22,23 @@ import javax.swing.ImageIcon;
  */
 public class dbconnectionsistem {
 
-    private static Connection koneksi;
-
+    private static final String URL      = "jdbc:mysql://127.0.0.1:3306/silandak";
+    private static final String USER     = "root";
+    private static final String PASSWORD = "";
+ 
+    // ✅ Setiap pemanggilan getKoneksi() selalu menghasilkan koneksi BARU
+    // Sehingga tidak ada masalah "connection closed" antar form
     public static Connection getKoneksi() {
-        // cek apakah koneksi
-        if (koneksi == null) {
-
-            try {
-                String url = "jdbc:mysql://127.0.0.1:3306/silandak";
-                String user = "root";
-                String password = "";
-                Class.forName("com.mysql.cj.jdbc.Driver");
-                koneksi = DriverManager.getConnection(url, user, password);
-            } catch (SQLException t) {
-                System.out.println("Error Membuat Koneksi");
-            } catch (ClassNotFoundException ex) {
-                System.getLogger(dbconnectionsistem.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
-            }
+        try {
+            Class.forName("com.mysql.cj.jdbc.Driver");
+            return DriverManager.getConnection(URL, USER, PASSWORD);
+        } catch (SQLException e) {
+            System.out.println("Error membuat koneksi: " + e.getMessage());
+            return null;
+        } catch (ClassNotFoundException e) {
+            System.out.println("Driver MySQL tidak ditemukan: " + e.getMessage());
+            return null;
         }
-        return koneksi;
     }
     
     

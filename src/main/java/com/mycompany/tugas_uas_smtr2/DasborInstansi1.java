@@ -95,7 +95,6 @@ public class DasborInstansi1 extends javax.swing.JFrame {
         setBackground(new java.awt.Color(255, 255, 255));
         setMaximumSize(new java.awt.Dimension(1920, 1080));
         setMinimumSize(new java.awt.Dimension(1920, 1080));
-        setPreferredSize(new java.awt.Dimension(1920, 1080));
 
         jPanel1.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
 
@@ -248,7 +247,7 @@ public class DasborInstansi1 extends javax.swing.JFrame {
         jLabel5.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/mycompany/tugas_uas_smtr2/images/clerk4.png"))); // NOI18N
 
         jLabel6.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
-        jLabel6.setText("Nama Instansi");
+        jLabel6.setText("Nama ");
 
         jLabel7.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
         jLabel7.setText("Shift");
@@ -307,26 +306,22 @@ public class DasborInstansi1 extends javax.swing.JFrame {
                 .addComponent(jSeparator2, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(layout.createSequentialGroup()
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(jButton1))
-                            .addGroup(layout.createSequentialGroup()
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(jLabel8)))
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(layout.createSequentialGroup()
-                                .addGap(211, 211, 211)
-                                .addComponent(jLabel7))
-                            .addGroup(layout.createSequentialGroup()
-                                .addGap(156, 156, 156)
-                                .addComponent(jLabel6)))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(jButton1)
                         .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                     .addGroup(layout.createSequentialGroup()
                         .addGap(167, 167, 167)
                         .addComponent(jLabel5)
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(194, 194, 194)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel8)
+                            .addComponent(jLabel6))
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(206, 206, 206)
+                        .addComponent(jLabel7)
                         .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
@@ -342,13 +337,13 @@ public class DasborInstansi1 extends javax.swing.JFrame {
                     .addGroup(layout.createSequentialGroup()
                         .addGap(175, 175, 175)
                         .addComponent(jLabel5)
-                        .addGap(18, 18, 18)
+                        .addGap(24, 24, 24)
                         .addComponent(jLabel6)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addGap(18, 18, 18)
                         .addComponent(jLabel7)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(jLabel8)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addGap(18, 18, 18)
                         .addComponent(jButton1)
                         .addGap(102, 102, 102))
                     .addGroup(layout.createSequentialGroup()
@@ -423,14 +418,14 @@ public class DasborInstansi1 extends javax.swing.JFrame {
 }
     private void bukaDetailPengaduan(int row) {
     String kodePengaduan = tbl_pengaduan.getValueAt(row, 4).toString(); // ← index 4
-
-    try {
-        Connection conn = dbconnectionsistem.getKoneksi();
+    
+    Connection conn = null;
+     try {
+        conn = dbconnectionsistem.getKoneksi();
         String sql = "SELECT * FROM form_pengaduan WHERE kode_pengaduan = ?";
         PreparedStatement ps = conn.prepareStatement(sql);
         ps.setString(1, kodePengaduan);
         ResultSet rs = ps.executeQuery();
-
         if (rs.next()) {
             DetailPengaduanTerbaruInstansi detail = new DetailPengaduanTerbaruInstansi(
                 rs.getString("kode_pengaduan"),
@@ -526,10 +521,11 @@ class KodeWithButtonEditor extends javax.swing.DefaultCellEditor {
     };
 
     // Load dari DB: hanya yang klasifikasi = 'emergency'
+   Connection conn = null;
     try {
-        Connection conn = dbconnectionsistem.getKoneksi();
+        conn = dbconnectionsistem.getKoneksi();
         String sql = "SELECT deskripsi, alamat_kejadian, waktu_kejadian, klasifikasi, kode_pengaduan "
-           + "FROM form_pengaduan WHERE klasifikasi IN ('emergency', 'non_emergency') ORDER BY waktu_kejadian DESC";
+                   + "FROM form_pengaduan WHERE klasifikasi IN ('emergency', 'non_emergency') ORDER BY waktu_kejadian DESC";
         PreparedStatement ps = conn.prepareStatement(sql);
         ResultSet rs = ps.executeQuery();
        
@@ -571,14 +567,14 @@ class KodeWithButtonEditor extends javax.swing.DefaultCellEditor {
     private void loadRiwayatPengaduan() {
         DefaultTableModel model = (DefaultTableModel) jTable2.getModel();
         model.setRowCount(0);
-        Connection con = dbconnectionsistem.getKoneksi();
-        if (con == null) {
-            return;
-        }
+        
+       
+        Connection conn = null;
+    try {
+        conn = dbconnectionsistem.getKoneksi();
         String sql = "SELECT deskripsi, klasifikasi, kode_pengaduan FROM form_pengaduan ORDER BY created_at DESC";
-        try {
-            PreparedStatement ps = con.prepareStatement(sql);
-            ResultSet rs = ps.executeQuery();
+        PreparedStatement ps = conn.prepareStatement(sql);
+        ResultSet rs = ps.executeQuery();
             while (rs.next()) {
                 String klas = rs.getString("klasifikasi").equals("emergency") ? "E" : "N.e";
                 model.addRow(new Object[]{
@@ -595,14 +591,12 @@ class KodeWithButtonEditor extends javax.swing.DefaultCellEditor {
     private void loadStatusPengaduan() {
         DefaultTableModel model = (DefaultTableModel) jTable2.getModel();
         model.setRowCount(0);
-        Connection con = dbconnectionsistem.getKoneksi();
-        if (con == null) {
-            return;
-        }
+        Connection conn = null;
+    try {
+        conn = dbconnectionsistem.getKoneksi();
         String sql = "SELECT deskripsi, status, kode_pengaduan FROM form_pengaduan ORDER BY created_at DESC";
-        try {
-            PreparedStatement ps = con.prepareStatement(sql);
-            ResultSet rs = ps.executeQuery();
+        PreparedStatement ps = conn.prepareStatement(sql);
+        ResultSet rs = ps.executeQuery();
             while (rs.next()) {
                 String status = switch (rs.getString("status")) {
                     case "masuk_sistem" ->
@@ -631,19 +625,14 @@ class KodeWithButtonEditor extends javax.swing.DefaultCellEditor {
 
     private void cariPengaduan(String kode, DefaultTableModel model) {
         model.setRowCount(0);
-        Connection con = dbconnectionsistem.getKoneksi();
-        if (con == null) {
-            return;
-        }
-
+        Connection conn = null;
+    try {
+        conn = dbconnectionsistem.getKoneksi();
         String sql = "SELECT deskripsi, alamat_kejadian, waktu_kejadian, klasifikasi, kode_pengaduan, status "
-                + "FROM form_pengaduan "
-                + "WHERE kode_pengaduan = ? "
-                + "ORDER BY created_at DESC";
-        try {
-            PreparedStatement ps = con.prepareStatement(sql);
-            ps.setString(1, kode);
-            ResultSet rs = ps.executeQuery();
+                   + "FROM form_pengaduan WHERE kode_pengaduan = ? ORDER BY created_at DESC";
+        PreparedStatement ps = conn.prepareStatement(sql);
+        ps.setString(1, kode);
+        ResultSet rs = ps.executeQuery();
             while (rs.next()) {
                 String klas = rs.getString("klasifikasi").equals("emergency") ? "E" : "N.e";
                 String status = switch (rs.getString("status")) {

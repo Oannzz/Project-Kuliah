@@ -59,7 +59,7 @@ public class isilaporanhasilpenangananInstansi extends javax.swing.JFrame {
         javax.swing.SwingUtilities.invokeLater(() -> loadFotoAndMaps(kodePengaduan));
     }
         private void loadFotoAndMaps(String kodePengaduan) {
-    System.out.println("DEBUG - kodePengaduan masuk: " + kodePengaduan);
+   
 
     try {
         // Buat koneksi baru langsung, jangan pakai try-with-resources
@@ -197,12 +197,13 @@ public class isilaporanhasilpenangananInstansi extends javax.swing.JFrame {
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                 .addContainerGap(23, Short.MAX_VALUE)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel4)
-                    .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGroup(jPanel1Layout.createSequentialGroup()
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                         .addComponent(jButton1)
-                        .addGap(14, 14, 14)))
+                        .addGap(14, 14, 14))
+                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(jLabel4)
+                        .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addGap(17, 17, 17))
         );
 
@@ -423,9 +424,16 @@ try {
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         // TODO add your handling code here:
-        DetailPengaduanTerbaruInstansi keluar = new DetailPengaduanTerbaruInstansi();
-        keluar.setVisible(true);
-        this.dispose();
+        DetailPengaduanTerbaruInstansi keluar = new DetailPengaduanTerbaruInstansi(
+        this.kodePengaduanData,
+        this.deskripsiData,
+        this.alamatData,
+        this.waktuData,
+        this.idInstansiDinamis
+    );
+    keluar.setVisible(true);
+    this.dispose();
+
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void btn_lihat_lokasiActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_lihat_lokasiActionPerformed
