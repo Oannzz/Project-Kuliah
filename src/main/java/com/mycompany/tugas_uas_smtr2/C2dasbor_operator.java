@@ -111,6 +111,7 @@ public class C2dasbor_operator extends javax.swing.JFrame {
         jLabel10.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
         jLabel10.setText("Sistem Layanan dan Pengaduan Damkar");
 
+        jPanel1.setBackground(new java.awt.Color(255, 255, 255));
         jPanel1.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
 
         tbl_trbr.setModel(new javax.swing.table.DefaultTableModel(
@@ -184,6 +185,7 @@ public class C2dasbor_operator extends javax.swing.JFrame {
                 .addContainerGap())
         );
 
+        jPanel2.setBackground(new java.awt.Color(255, 255, 255));
         jPanel2.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
 
         tbl_rwyt.setModel(new javax.swing.table.DefaultTableModel(
@@ -257,6 +259,7 @@ public class C2dasbor_operator extends javax.swing.JFrame {
                 .addContainerGap())
         );
 
+        jPanel6.setBackground(new java.awt.Color(255, 255, 255));
         jPanel6.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
 
         jLabel13.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
@@ -507,29 +510,32 @@ public class C2dasbor_operator extends javax.swing.JFrame {
     }
 
     private void bukaDetailPengaduan(int row) {
-        String kodePengaduan = tbl_trbr.getValueAt(row, 3).toString();
+    String kodePengaduan = tbl_trbr.getValueAt(row, 3).toString();
 
-        try {
-            Connection conn = dbconnectionsistem.getKoneksi();
-            String sql = "SELECT * FROM form_pengaduan WHERE kode_pengaduan = ?";
-            PreparedStatement ps = conn.prepareStatement(sql);
-            ps.setString(1, kodePengaduan);
-            ResultSet rs = ps.executeQuery();
+    try {
+        Connection conn = dbconnectionsistem.getKoneksi();
+        String sql = "SELECT * FROM form_pengaduan WHERE kode_pengaduan = ?";
+        PreparedStatement ps = conn.prepareStatement(sql);
+        ps.setString(1, kodePengaduan);
+        ResultSet rs = ps.executeQuery();
 
-            if (rs.next()) {
-                detailpengaduanterbaruOperator detail = new detailpengaduanterbaruOperator(
-                        rs.getString("kode_pengaduan"),
-                        rs.getString("deskripsi"),
-                        rs.getString("alamat_kejadian"),
-                        rs.getTimestamp("waktu_kejadian").toString());
-                detail.setVisible(true);
-            }
-            rs.close();
-        } catch (Exception e) {
-            e.printStackTrace();
-            JOptionPane.showMessageDialog(this, "Gagal membuka detail: " + e.getMessage());
+        if (rs.next()) {
+            detailpengaduanterbaruOperator detail = new detailpengaduanterbaruOperator(
+                rs.getString("kode_pengaduan"),
+                rs.getString("deskripsi"),
+                rs.getString("alamat_kejadian"),
+                rs.getTimestamp("waktu_kejadian").toString(),
+                jLabel6.getText(),  // ← nama operator
+                jLabel7.getText()   // ← shift
+            );
+            detail.setVisible(true);
         }
+        rs.close();
+    } catch (Exception e) {
+        e.printStackTrace();
+        JOptionPane.showMessageDialog(this, "Gagal membuka detail: " + e.getMessage());
     }
+}
 
     // ===== Inner class: tombol icon search =====
     class KodeWithButtonRenderer extends javax.swing.JPanel implements javax.swing.table.TableCellRenderer {
