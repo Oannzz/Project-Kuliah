@@ -18,6 +18,8 @@ import javax.swing.table.DefaultTableModel;
 public class DasborInstansi1 extends javax.swing.JFrame {
 
     private int idInstansiDinamis;
+    private String namaInstansiData = "";  // ✅ tambah ini
+    private String shiftInstansiData = "";
     
     
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(DasborInstansi1.class.getName());
@@ -432,7 +434,9 @@ public class DasborInstansi1 extends javax.swing.JFrame {
                 rs.getString("deskripsi"),
                 rs.getString("alamat_kejadian"),
                 rs.getTimestamp("waktu_kejadian").toString(),
-                this.idInstansiDinamis
+                this.idInstansiDinamis,
+                this.namaInstansiData,  // ✅ teruskan
+                this.shiftInstansiData
             );
             detail.setVisible(true);
         }
@@ -689,6 +693,8 @@ class KodeWithButtonEditor extends javax.swing.DefaultCellEditor {
     }
 
     public void setInfoInstansi(String nama, String shift) {
+        this.namaInstansiData  = nama;   // ✅ simpan ke field
+        this.shiftInstansiData = shift;
         jLabel6.setText(nama);
         jLabel7.setText("Shift: " + shift);
     }

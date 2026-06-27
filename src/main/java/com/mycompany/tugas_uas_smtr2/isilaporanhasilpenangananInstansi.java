@@ -33,6 +33,8 @@ public class isilaporanhasilpenangananInstansi extends javax.swing.JFrame {
         private String deskripsiData;
         private String alamatData;
         private String waktuData;
+        private String namaInstansiData;
+        private String shiftData;   
         
 
 // TAMBAHKAN INI: Untuk menampung path file pilihan JFileChooser sebelum dikirim
@@ -41,7 +43,7 @@ public class isilaporanhasilpenangananInstansi extends javax.swing.JFrame {
         private int idInstansiDinamis;
 
          public isilaporanhasilpenangananInstansi(String kodePengaduan, String deskripsi, String alamat,
-                       String waktuKejadian, int idInstansi
+                       String waktuKejadian, int idInstansi, String nama, String shift
                        ) {
         initComponents();
         field_kd.setText(kodePengaduan);
@@ -53,6 +55,8 @@ public class isilaporanhasilpenangananInstansi extends javax.swing.JFrame {
         this.deskripsiData = deskripsi;
         this.alamatData = alamat;
         this.waktuData = waktuKejadian;
+        this.namaInstansiData   = nama;   // ✅ simpan
+        this.shiftData          = shift;
         
         this.idInstansiDinamis = idInstansi;
         btn_lihat_lokasi.setEnabled(false);
@@ -429,7 +433,9 @@ try {
         this.deskripsiData,
         this.alamatData,
         this.waktuData,
-        this.idInstansiDinamis
+        this.idInstansiDinamis,
+        this.namaInstansiData, // ✅ ikut dikirim balik
+        this.shiftData
     );
     keluar.setVisible(true);
     this.dispose();

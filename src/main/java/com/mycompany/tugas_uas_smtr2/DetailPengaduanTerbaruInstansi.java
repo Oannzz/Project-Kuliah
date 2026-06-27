@@ -26,12 +26,14 @@ public class DetailPengaduanTerbaruInstansi extends javax.swing.JFrame {
     private String deskripsiData;
     private String alamatData;
     private String waktuData;
+    private String namaInstansiData;
+    private String shiftData;
     
    
     
     
     public DetailPengaduanTerbaruInstansi(String kodePengaduan, String deskripsi, String alamat,
-                       String waktuKejadian, int idIns
+                       String waktuKejadian, int idIns,String nama, String shift
                        ) {
         initComponents();
         field_kode.setText(kodePengaduan);
@@ -43,8 +45,11 @@ public class DetailPengaduanTerbaruInstansi extends javax.swing.JFrame {
         this.deskripsiData = deskripsi;
         this.alamatData = alamat;
         this.waktuData = waktuKejadian;
-        
         this.idInstansiDinamis = idIns;
+        this.namaInstansiData   = nama;   // ✅ simpan
+        this.shiftData          = shift;
+        
+        setInfoInstansi(nama, shift);
         
         btn_lihat_lokasi.setEnabled(false);
         loadFotoPengaduan(kodePengaduan);
@@ -123,7 +128,10 @@ public class DetailPengaduanTerbaruInstansi extends javax.swing.JFrame {
     }
 }
     
-    
+    public void setInfoInstansi(String nama, String shift) {
+        jLabel8.setText(nama);
+        jLabel9.setText("Shift: " + shift);
+    }
     
     
     
@@ -395,7 +403,8 @@ public class DetailPengaduanTerbaruInstansi extends javax.swing.JFrame {
         int idInstansi = this.idInstansiDinamis;
         
         
-        isilaporanhasilpenangananInstansi detailForm = new isilaporanhasilpenangananInstansi(kodePengaduanData, deskripsiData, alamatData, waktuData, idInstansi); // Ganti dengan nama class Frame tujuanmu
+        isilaporanhasilpenangananInstansi detailForm = new isilaporanhasilpenangananInstansi(kodePengaduanData, deskripsiData, alamatData, waktuData, idInstansi,this.namaInstansiData, // ✅ ikut dikirim
+        this.shiftData); // Ganti dengan nama class Frame tujuanmu
 
 // 2. Tampilkan halaman tujuan tersebut ke layar
     detailForm.setVisible(true);
@@ -409,18 +418,18 @@ public class DetailPengaduanTerbaruInstansi extends javax.swing.JFrame {
         // TODO add your handling code here:
         DasborInstansi1 keluar = new DasborInstansi1( idInstansiDinamis);
         keluar.setVisible(true);
+        keluar.setInfoInstansi(this.namaInstansiData, this.shiftData);
         this.dispose();
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void btn_lihat_lokasiActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_lihat_lokasiActionPerformed
         // TODO add your handling code here:
-        btn_lihat_lokasi.addActionListener(e -> {
+        
         Util.bukaMapsDiBrowser(
         String.format(java.util.Locale.US,
             "https://www.google.com/maps?q=%f,%f", 
             currentLat, currentLng)
     );
-});
     }//GEN-LAST:event_btn_lihat_lokasiActionPerformed
 
     /**
