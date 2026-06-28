@@ -14,7 +14,6 @@ public class pengaduan {
     private String klasifikasi;
     private String deskripsi;
     private String alamat_kejadian;
-    private String lokasi_maps;
     private String status;
     private String waktu_kejadian;
     
@@ -65,11 +64,6 @@ public class pengaduan {
         return alamat_kejadian;}
     public void setalamat_kejadian(String alamat_kejadian){
         this.alamat_kejadian = alamat_kejadian;
-    }
-    public String getlokasi_maps(){
-        return lokasi_maps;}
-    public void setlokasi_maps(String lokasi_maps){
-        this.lokasi_maps = lokasi_maps;
     }
     public String getstatus(){
         return status;}

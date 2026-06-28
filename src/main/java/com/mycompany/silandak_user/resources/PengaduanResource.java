@@ -46,7 +46,6 @@ public class PengaduanResource {
                 p.setklasifikasi(rs.getString("klasifikasi"));
                 p.setdeskripsi(rs.getString("deskripsi"));
                 p.setalamat_kejadian(rs.getString("alamat_kejadian"));
-                p.setlokasi_maps(rs.getString("lokasi_maps"));
                 p.setstatus(rs.getString("status"));
                 p.setwaktu_kejadian(rs.getString("waktu_kejadian"));
                 

@@ -4,66 +4,133 @@
         <meta charset="UTF-8">
         
         <meta name="viewport"
-              content="width=device-widt,initial-scale=1.0">
+              content="width=device-width,initial-scale=1.0">
         
         <title>SILANDAK</title>
         
         <style>
+            *{
+                box-sizing: border-box;
+            }
+            .container{
+                width: min(100%,480px);
+                margin: auto;
+                background: white;
+                border-radius: 20px;
+                overflow: hidden;
+                box-shadow: 0 4px 15px rgba(0,0,0,.15);
+            }
+            .header{
+                background: linear-gradient(to bottom, #c62828 0%, #c53935 40%, #ffffff 100%);
+                padding: 25px;
+                text-align: center;
+                border-radius: 20px 20px 0 0;
+            }
+            .header h1{
+                margin: 15px 0 5px;
+                color: white;
+                font-size: 36px;
+                font-weight: bold;
+                -webkit-text-stroke: 1.5px black;
+                text-shadow: 2px 2px 4px rgba(0,0,0,.4);
+            }
+            .header p{
+                color: white;
+                font-weight: bold;
+                text-shadow: 1px 1px 3px black;
+            }
+            .menu-link{
+                text-decoration: none;
+            }
+            .menu-btn{
+                width: 90%;
+                margin: 12px auto;
+                display: block;
+                padding: 16px;
+                border: none;
+                border-radius: 12px;
+                background: #d32f2f;
+                color: white;
+                font-size: 16px;
+                font-weight: bold;
+                cursor: pointer;
+                transition: .3s;
+            }
+            .menu-btn:hover{
+                background: #b71c1c;
+            }
+            .table-wrapper{
+                margin: 0 10px 0 10px;
+                overflow-x: auto;
+                padding: 0 15px 20px;
+            }
             body{
-                font-family: Arial, sans-serif;
-                margin: 15px;
-            }
-            h1{
-                text-align: center;
-            }
-            p{
-                text-align: center;
-            }
-            button{
-                width: 100%;
+                margin: 0 ;
                 padding: 15px;
-                margin-top: 10px;
-                border-radius: 10px;
+                background : #f3f5f7;
+                font-family: Arial, sans-serif;
             }
             table{
                 width: 100%;
+                border-collapse: collapse;
+                font-size: 13px;
+            }
+            th{
+                background: #d32f2f;
+                color: white;
+                padding: 10px;
+            }
+            td{
+                padding: 8px;
+                border: 1px solid #ddd;
+            }
+            tr:nth-child(even){
+                background: #f8f8f8;
+            }
+            h2{
+                margin: 10px;
             }
         </style>
     </head>
     <body>
-        <h1>SILANDAK</h1>
-        <p>Sistem Layanan dan Pengaduan Damkar</p>
-        
-        <a href="Buat_Laporan_Baru.html">
-            <button>
+        <div class="container">
+            <div class="header">
+                <h1>SILANDAK</h1>
+            <p>Sistem Layanan dan Pengaduan Damkar</p>
+            </div>
+
+        <a href="Buat_Laporan_Baru.html" class="menu-link">
+            <button class="menu-btn">
                 Buat Laporan Baru
             </button>
         </a>
-        <br><br>
         
-        <a href="Cek_Status.html">
-            <button>
+        <a href="Cek_Status.html" class="menu-link">
+            <button class="menu-btn">
                 Cek Status Pengaduan
             </button>
         </a>
         
         <h2>Riwayat Pengaduan</h2>
-        <table border="1">
-            <thead>
+        <div class="table-wrapper">
+            <table border="1">
+                <thead>
+                    <tr>
+                        <th>deskripsi</th>
+                        <th>klasifikasi</th>
+                        <th>tanggal</th>
+                        <th>Kode Pengaduan</th>
+                        <th>Status Laporan</th>
+                    </tr>
+                </thead>
+                <tbody id="tabelRiwayat">
                 <tr>
-                    <th>deskripsi</th>
-                    <th>klasifikasi</th>
-                    <th>tanggal</th>
-                    <th>Kode Pengaduan</th>
-                    <th>Status Laporan</th>
+                    <td colspan="5" style="text-align: center">memuat data dari database...</td>
                 </tr>
-            </thead>
-            <tbody id="tabelRiwayat">
-            <tr>
-                <td colspan="4" style="text-align: center">memuat data dari database...</td>
-            </tr>
-            </tbody>
-        </table>
+                </tbody>
+            </table>
+        </div>
+        
         <script>
             document.addEventListener("DOMContentLoaded", function(){
                 fetch(`http://localhost:8080/api/pengaduan/riwayat`)
@@ -78,12 +145,33 @@
                     tabel.innerHTML = "";
                     
                     data.forEach(p => {
+                        let warna = "#666";
+                        if(p.status === "selesai"){
+                            warna = "green";
+                        }else if(p.status === "ditangani"){
+                            warna = "orange";
+                        }else if(p.status === "ditolak"){
+                            warna = "red";
+                        }else if(p.status === "masuk_sistem"){
+                            warna = "#1976d2";
+                        }
                         let baris = `<tr>
                         <td>${p.deskripsi}</td>
                         <td>${p.klasifikasi}</td>
                         <td>${p.waktu_kejadian}</td>
                         <td>${p.kode_pengaduan}</td>
-                        <td><strong>${p.status}</strong></td>
+                        <td>
+                            <span style="
+                                background:${warna}";
+                                color: white;
+                                padding: 4px 10px;
+                                border-radius: 15px;
+                                font-weight: bold;
+                                display: inline-block;
+                                ">
+                                ${p.status}
+                            </span>
+                        </td>
                 </tr>`;
                 tabel.innerHTML += baris;
                     });
@@ -93,5 +181,6 @@
                 });
             });
         </script>
+        </div>
     </body>
 </html>
