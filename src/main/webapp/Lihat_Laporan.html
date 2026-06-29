@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Lihat Laporan</title>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+        
+        <style>
+            *{
+                box-sizing: border-box;
+            }
+            .container{
+                position: relative;
+                z-index: 1;
+                
+                width:min(100%,480px);
+                max-width: 480px;
+                margin: 0 auto;
+                
+                background : rgba(255,255,255,0.75);
+                border-radius: 20px;
+                padding: 20px;
+                box-shadow: 0 4px 15px rgba(0,0,0,.15);
+            }
+            .header{
+                position: relative;
+                background: linear-gradient(to bottom, #c62828 0%, #c53935 40%, #ffffff 100%);
+                color: #212121;
+                padding: 15px 25px;
+                margin: -20px -20px 15px -20px;
+                border-radius: 20px 20px 0 0;
+                text-align: center;
+            }
+            .header-content{
+                display: flex;
+                align-items: center;
+                justify-content: flex-start;
+                gap: 15px;
+                padding-left: 0;
+            }
+            .logo{
+                width: 100px;
+                height: 100px;
+                object-fit: contain;
+                flex-shrink: 0;
+            }
+            .header-text{
+                display: flex;
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            .header-text h1{
+                margin: 0;
+                color: white;
+                font-size: 36px;
+                font-weight: bold;
+                -webkit-text-stroke: 1.5px black;
+                text-shadow: 2px 2px 4px rgba(0,0,0,.45);
+            }
+            .header-text p{
+                margin-top: 4px;
+                margin-bottom: 0;
+                color: white;
+                font-weight: bold;
+                text-shadow: 1px 1px 3px black;
+                text-align: left;
+            }
+            .back-btn{
+                position: absolute;
+                right: 18px;
+                top: 18px;
+                
+                width: 42px;
+                height: 42px;
+                
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                
+                border-radius: 50%;
+                background: rgba(255,255,255,.2);
+                color: white;
+                font-size: 22px;
+                text-decoration: none;
+                
+                transition: .2s;
+            }
+            .back-btn.hover{
+                background: #d32f2f;
+            }
+            .detail-box{
+                margin-top: 20px;
+                padding: 15px;
+                background: white;
+                border-radius: 12px;
+                border: 1px solid #ddd;
+            }
+            .detail-box p{
+                text-align: left;
+                margin-bottom: 15px;
+                line-height: 1.5;
+            }
+            #fotoMedia{
+                width: 100%;
+                max-height: 250px;
+                object-fit: cover;
+                border-radius: 10px;
+                margin-top: 10px;
+                border: 1px solid #ccc;
+            }
+            body{
+                margin: 0 ;
+                padding: 5px 15px 15px;
+                background : #f3f5f7;
+                font-family: Arial, sans-serif;
+            }
+            h1{
+                text-align: center;
+            }
+            p{
+                text-align: center;
+            }
+            button{
+                width: 100%;
+                padding: 15px;
+                border: none;
+                margin-top: 10px;
+                border-radius: 12px;
+                background: #d32f2f;
+                color: white;
+                font-weight: bold;
+                cursor: pointer;
+            }
+            button:hover{
+                background: #b71c1c;
+            }
+        </style>        
+    </head>
+    <body>
+        <div class="container">
+            <div class="header">
+                <div class="header-content">
+                    <img src="images/SILANDAK_Logo.png" class="logo">
+                    <div class="header-text">
+                        <h1>SILANDAK</h1>
+                        
+                        <p>Sistem Layanan dan Pengaduan Damkar</p>
+                    </div>
+                </div>
+            </div>
+            <div style="padding: 25px">
+                <h2 style="text-align: center">
+                    Laporan Penanganan
+                </h2>
+                
+                <div class="detail-box">
+                    <p><b>Kode :</b>
+                        <span id="kode"></span>
+                    </p>
+                    
+                    <p>
+                        <b>Diteruskan Operator :</b><br>
+                        <span id="operator"></span>
+                    </p>
+                    
+                    <p>
+                        <b>Ditangani Instansi :</b><br>
+                        <span id="instansi"></span>
+                    </p>
+                    
+                    <div id="petugasBox"
+                        style="display: none;">
+                        <p>
+                            <b>Diverifikasi Petugas :</b><br>
+                            <span id="petugas"></span>
+                        </p>
+                    </div>
+                    
+                    <p>
+                        <b>Deskripsi :</b><br>
+                        <span id="deskripsi"></span>
+                    </p>
+                    
+                    <p>
+                        <b>Alamat :</b><br>
+                        <span id="alamat"></span>
+                    </p>
+                    
+                    <p>
+                        <b>Foto Media</b>
+                    </p>
+                    
+                    <img id="fotoMedia">                    
+                </div>
+                
+                <button onclick="history.back()">
+                    Kembali
+                </button>
+            </div>
+        </div>
+        
+        <script>
+            const kode= new URLSearchParams(window.location.search).get("kode");
+            
+            console.log("kode =", kode);
+            
+            if(kode){
+                fetch("http://localhost:8080/api/pengaduan/laporan?kode=" + encodeURIComponent(kode))
+                        .then(res => res.json())
+                        .then(data =>{
+                            console.log(data);
+                    if(!data){
+                        alert("Data Kosong");
+                        return;
+                    }
+                    document.getElementById("kode").innerText=data.kode_pengaduan||"-";
+                    document.getElementById("operator").innerText=data.nama_operator||"-";
+                    document.getElementById("instansi").innerText=data.nama_instansi||"-";
+                    document.getElementById("deskripsi").innerText=data.deskripsi_penanganan||"-";
+                    document.getElementById("alamat").innerText=data.alamat||"-";
+                    if(data.foto_media){
+                        document.getElementById("fotoMedia").src="data:image/jpeg;base64," + data.foto_media;
+                    }
+                    if(data.klasifikasi && data.klasifikasi.toLowerCase() === "non emergency"){
+                        document.getElementById("petugasBox").style.display="block";
+                        document.getElementById("petugas").innerText=data.nama_petugas||'-';
+                            }
+                })
+                        .catch(err=>{
+                            console.log(err);
+                            alert("Gagal Memuat Laporan");
+                });
+            }
+        </script>
+    </body>
+</html>

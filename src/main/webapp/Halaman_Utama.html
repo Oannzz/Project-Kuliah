@@ -2,11 +2,10 @@
 <html>
     <head>
         <meta charset="UTF-8">
-        
         <meta name="viewport"
               content="width=device-width,initial-scale=1.0">
-        
         <title>SILANDAK</title>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
         
         <style>
             *{
@@ -22,12 +21,30 @@
             }
             .header{
                 background: linear-gradient(to bottom, #c62828 0%, #c53935 40%, #ffffff 100%);
-                padding: 25px;
+                padding: 15px 25px;
                 text-align: center;
                 border-radius: 20px 20px 0 0;
             }
+            .header-content{
+                display: flex;
+                align-items: center;
+                justify-content: flex-start;
+                gap: 15px;
+                padding-left: 0;
+            }
+            .logo{
+                width: 100px;
+                height: 100px;
+                object-fit: contain;
+                flex-shrink: 0;
+            }
+            .header-text{
+                display: flex;
+                flex-direction: column;
+                align-items: flex-start;
+            }
             .header h1{
-                margin: 15px 0 5px;
+                margin: 0;
                 color: white;
                 font-size: 36px;
                 font-weight: bold;
@@ -35,9 +52,12 @@
                 text-shadow: 2px 2px 4px rgba(0,0,0,.4);
             }
             .header p{
+                margin-top: 4px;
+                margin-bottom: 0;
                 color: white;
                 font-weight: bold;
                 text-shadow: 1px 1px 3px black;
+                text-align: left;
             }
             .menu-link{
                 text-decoration: none;
@@ -45,8 +65,8 @@
             .menu-btn{
                 width: 90%;
                 margin: 12px auto;
-                display: block;
-                padding: 16px;
+                display: flex;
+                padding: 16px 20px;
                 border: none;
                 border-radius: 12px;
                 background: #d32f2f;
@@ -55,25 +75,59 @@
                 font-weight: bold;
                 cursor: pointer;
                 transition: .3s;
+                justify-content: space-between;
+                align-items: center;
             }
             .menu-btn:hover{
                 background: #b71c1c;
             }
+            .menu-btn span{
+                flex: 1;
+                text-align: left;
+            }
+            .menu-btn i{
+                font-size: 20px;
+            }
             .table-wrapper{
-                margin: 0 10px 0 10px;
-                overflow-x: auto;
-                padding: 0 15px 20px;
+                margin: 0;
+                overflow-x: hidden;
+                padding: 0 10px 20px;
+            }
+            .footer{
+                padding: 25px;
+                text-align: left;
+                background: #fafafa;
+                border-top: 1px solid #ddd;
+            }
+            .footer p{
+                font-weight: bold;
+                margin-bottom: 12px;
+            }
+            .footer-btn{
+                display: block;
+                width: 90%;
+                margin: 10px auto;
+                padding: 12px;
+                border-radius: 12px;
+                background: #1976d2;
+                color: white;
+                text-decoration: none;
+                font-weight: bold;
+            }
+            .footer-btn:hover{
+                background: #0d47a1;
             }
             body{
                 margin: 0 ;
-                padding: 15px;
+                padding: 5px 15px 15px;
                 background : #f3f5f7;
                 font-family: Arial, sans-serif;
             }
             table{
                 width: 100%;
                 border-collapse: collapse;
-                font-size: 13px;
+                font-size: 12px;
+                table-layout: fixed;
             }
             th{
                 background: #d32f2f;
@@ -88,29 +142,40 @@
                 background: #f8f8f8;
             }
             h2{
-                margin: 10px;
+                margin: 20px 10px 10px 10px;
+                padding-left: 10px;
             }
         </style>
     </head>
     <body>
         <div class="container">
             <div class="header">
+            <div class="header-content">
+                <img src="images/SILANDAK_Logo.png" alt="logo SILANDAK" class="logo">
+                
+                <div class="header-text">
                 <h1>SILANDAK</h1>
             <p>Sistem Layanan dan Pengaduan Damkar</p>
+                </div>
             </div>
+            </div>
+            <br>
 
         <a href="Buat_Laporan_Baru.html" class="menu-link">
             <button class="menu-btn">
-                Buat Laporan Baru
+                <span>Buat Laporan Baru</span>
+                <i class="fa-solid fa-file-circle-plus"></i>
             </button>
         </a>
         
         <a href="Cek_Status.html" class="menu-link">
             <button class="menu-btn">
-                Cek Status Pengaduan
+                <span>Cek Status Pengaduan</span>
+                <i class="fa-solid fa-magnifying-glass"></i>
             </button>
         </a>
-        
+            <br>
+            
         <h2>Riwayat Pengaduan</h2>
         <div class="table-wrapper">
             <table border="1">
@@ -129,6 +194,18 @@
                 </tr>
                 </tbody>
             </table>
+        </div>
+        
+        <div class="footer">
+            <p><i class="fa-solid fa-headset"></i> Butuh Bantuan ?</p>
+            <a href="tel:113" class="footer-btn">
+                <i class="fa-solid fa-phone"></i>
+                Telepon 113
+            </a>
+            <a href="https://wa.me/+6281234567890" class="footer-btn">
+                <i class="fa-brands fa-whatsapp"></i>
+                Hubungi Operator
+            </a>
         </div>
         
         <script>
@@ -155,6 +232,8 @@
                         }else if(p.status === "masuk_sistem"){
                             warna = "#1976d2";
                         }
+                        let status =
+                                p.status.replace("_"," ");
                         let baris = `<tr>
                         <td>${p.deskripsi}</td>
                         <td>${p.klasifikasi}</td>
@@ -162,12 +241,16 @@
                         <td>${p.kode_pengaduan}</td>
                         <td>
                             <span style="
-                                background:${warna}";
+                                background:${warna};
                                 color: white;
                                 padding: 4px 10px;
                                 border-radius: 15px;
                                 font-weight: bold;
                                 display: inline-block;
+                                max-width: 100%;
+                                white-space: normal;
+                                word-break: break-word;
+                                text-align: center;
                                 ">
                                 ${p.status}
                             </span>

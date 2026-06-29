@@ -2,12 +2,180 @@
 <html>
     <head>
         <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="viewport" 
+              content="width=device-width, initial-scale=1.0">
         <title>Cek Status</title>
-         <style>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+        
+        <style>
+            *{
+                box-sizing: border-box;
+            }
+            .container{
+                position: relative;
+                z-index: 1;
+                
+                width:min(100%,480px);
+                max-width: 480px;
+                margin: 0 auto;
+                
+                background : rgba(255,255,255,0.75);
+                border-radius: 20px;
+                padding: 20px;
+                box-shadow: 0 4px 15px rgba(0,0,0,.15);
+            }
+            .header{
+                position: relative;
+                background: linear-gradient(to bottom, #c62828 0%, #c53935 40%, #ffffff 100%);
+                color: #212121;
+                padding: 15px 25px;
+                margin: -20px -20px 15px -20px;
+                border-radius: 20px 20px 0 0;
+                text-align: center;
+            }
+            .header-content{
+                display: flex;
+                align-items: center;
+                justify-content: flex-start;
+                gap: 15px;
+                padding-left: 0;
+            }
+            .logo{
+                width: 100px;
+                height: 100px;
+                object-fit: contain;
+                flex-shrink: 0;
+            }
+            .header-text{
+                display: flex;
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            .header-text h1{
+                margin: 0;
+                color: white;
+                font-size: 36px;
+                font-weight: bold;
+                -webkit-text-stroke: 1.5px black;
+                text-shadow: 2px 2px 4px rgba(0,0,0,.45);
+            }
+            .header-text p{
+                margin-top: 4px;
+                margin-bottom: 0;
+                color: white;
+                font-weight: bold;
+                text-shadow: 1px 1px 3px black;
+                text-align: left;
+            }
+            .back-btn{
+                position: absolute;
+                right: 18px;
+                top: 18px;
+                
+                width: 42px;
+                height: 42px;
+                
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                
+                border-radius: 50%;
+                background: rgba(255,255,255,.2);
+                color: white;
+                font-size: 22px;
+                text-decoration: none;
+                
+                transition: .2s;
+            }
+            .back-btn.hover{
+                background: #d32f2f;
+            }
+            .timeline-vertical{
+                display: flex;
+                flex-direction: column;
+                margin-top: 25px;
+                gap: 20px;
+            }
+            .step-v{
+                display: flex;
+                align-items: flex-start;
+                gap: 15px;
+                position: relative;
+            }
+            .step-v:not(:last-child)::before{
+                content: "";
+                position: absolute;
+                left: 24px;
+                top: 55px;
+                width: 4px;
+                height: 40px;
+                background: #bdbdbd;
+            }
+            .step-v.active:not(:last-child)::before{
+                background: #22c55e;
+            }
+            .circle{
+                width: 50px;
+                height: 50px;
+                border-radius: 50%;
+                background: #bdbdbd;
+                color: white;
+                
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                
+                font-size: 20px;
+                flex-shrink: 0;
+            }
+            .step-v.active .circle{
+                background: #22c55e;
+            }
+            .content p{
+                margin: 5px 0 0;
+                font-size: 14px;
+                color: #666;
+                text-align: left;
+            }
+            .circle i{
+                font-size: 18px;
+            }
+            .step.active .circle{
+                background: #4caf50;
+            }
+            .step p{
+                margin-top: 8px;
+                font-size: 12px;
+                line-height: 1.2;
+            }
+            .detail-box{
+                margin-top: 20px;
+                padding: 15px;
+                background: white;
+                border-radius: 12px;
+                border: 1px solid #ddd;
+            }
+            .detail-box p{
+                text-align: left;
+                margin-bottom: 15px;
+                line-height: 1.5;
+            }
+            .foto-box{
+                margin-top: 10px;
+            }
+            #fotoHasil{
+                width: 100%;
+                max-height: 250px;
+                object-fit: cover;
+                border-radius: 10px;
+                margin-top: 10px;
+                border: 1px solid #ccc;
+            }
             body{
+                margin: 0 ;
+                padding: 5px 15px 15px;
+                background : #f3f5f7;
                 font-family: Arial, sans-serif;
-                margin: 15px;
             }
             h1{
                 text-align: center;
@@ -18,33 +186,234 @@
             button{
                 width: 100%;
                 padding: 15px;
+                border: none;
                 margin-top: 10px;
-                border-radius: 10px;
+                border-radius: 12px;
+                background: #d32f2f;
+                color: white;
+                font-weight: bold;
+                cursor: pointer;
+            }
+            button:hover{
+                background: #b71c1c;
             }
             table{
                 width: 100%;
             }
+            input{
+                width: 100%;
+                padding: 12px;
+                margin-top: 8px;
+                margin-bottom: 15px;
+                border-radius: 10px;
+                border: 1px solid #ccc;
+            }
         </style>
     </head>
     <body>
-        <a href="Halaman_Utama.html">
-            <- Kembali
-        </a>
+        <div class="container">
+            <div class="header">
+                <a href="Halaman_Utama.html" class="back-btn">
+                    <i class="fa-solid fa-house"></i>
+                </a>
+                <div class="header-content">
+                    <img src="images/SILANDAK_Logo.png" class="logo">
+                    
+                    <div class="header-text">
+                        <h1>SILANDAK</h1>
+                        <p>Sistem Layanan dan Pengaduan Damkar</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div style="padding: 25px">
+                <h2 style="text-align: center">
+                    Cek Status Pengaduan
+                </h2>
         
-        <h1>Cek Status Pengaduan</h1>
-        <label>Masukan Kode Pengaduan</label>
+                <label>Masukan Kode Pengaduan</label>
         
-        <br>
-        <input type="text"
-               placeholder="EMR-0001">
+                <input type="text"
+                       id="kode"
+                       placeholder="FRM_xxxx">
+                <button type="button" onclick="cariStatus()">
+                    Cari Status
+                </button>
+                
+                <div id="hasil" style="margin-top: 20px;
+                                       padding: 20px;
+                                       border-radius:15px;
+                                       background: #f8f8f8;
+                                       display: none;">
+                    
+                    <h3>Status Pengaduan</h3>
+                    <br>
+                    <p><b>Kode :</b>
+                        <span id="kodeHasil"></span>
+                    </p>
+                    
+                    <div class="detail-box">
+                        <p>
+                            <b>Deskripsi :</b><br>
+                            <span id="deskripsiLaporan"></span>
+                        </p>
+                        
+                        <p>
+                            <b>Alamat :</b><br>
+                            <span id="alamatLaporan"></span>
+                        </p>
+                        
+                        <div class="foto-box">
+                            <b>Foto Bukti :</b><br>
+                            <img id="fotoBukti" src="" alt="Foto Bukti">
+                        </div>
+                    </div>
+                    
+                    <div class="timeline-vertical">
+                        <div class="step-v active" id="step1">
+                            <div class="circle">
+                                <i class="fa-solid fa-file"></i>
+                            </div>
+                            
+                            <div class="content">
+                                <h4>Masuk Sistem</h4>
+                                <p>Pengaduan DIterima Sistem</p>
+                            </div>
+                        </div>
+                            
+                        <div class="step-v" id="step2">
+                            <div class="circle">
+                                <i class="fa-solid fa-spinner"></i>
+                            </div>
+                            
+                            <div class="content">
+                                <h4>Diproses</h4>
+                                <p>Laporan Diproses Petugas</p>
+                            </div>
+                        </div>
+                        
+                        <div class="step-v" id="step3">
+                            <div class="circle">
+                                <i class="fa-solid fa-fire-extinguisher"></i>
+                            </div>
+                            
+                            <div class="content">
+                                <h4>Ditangani</h4>
+                                <p>Petugas Damkar Menuju Lokasi</p>
+                            </div>
+                        </div>
+                        
+                        <div class="step-v" id="step4">
+                            <div class="circle">
+                                <i class="fa-solid fa-check"></i>
+                            </div>
+                            
+                            <div class="content">
+                                <h4>Selesai</h4>
+                                <p>Pengaduan Selesai</p>
+                            </div>
+                        </div>
+                    </div>
+                    <button id="btnLaporan"
+                            style="margin-top: 20px;
+                            display: none;"
+                            onclick="lihatLaporan()">
+                                Lihat Laporan
+                    </button>
+                </div>
+                
+                </div>
+            </div>
         
-        <br><br>
-        <button>
-            Cari Status
-        </button>
+        <script>
+            function cariStatus(){
+                let kode=
+                        document.getElementById("kode").value
+                                                       .trim()
+                                                       .toUpperCase()
+                                                       .replace(/[^A-z0-9-]/g, "");
+                if(kode === ""){
+                    alert("Masukan Kode Pengaduan");
+                    return;
+                }
+            
+            fetch("http://localhost:8080/api/pengaduan/status?kode=" + encodeURIComponent(kode))
+                    .then(async (response) => {
+                        if(response.status === 204){
+                            alert("Pengaduan Tidak Ditemukan");
+                            return null;
+                        }
+                        if(!response.ok){
+                            throw new Error("HTTP " + response.status);
+                        }
+                        const text= await response.text();
+                        if(!text){
+                            return null;
+                        }
+                        return JSON.parse(text);
+            })
+                    .then(data => {
+                        if(!data){
+                            return;
+                        }
+                        document.getElementById("hasil").style.display="block";
+                        document.getElementById("kodeHasil").innerHTML=data.kode_pengaduan;
+                        document.getElementById("deskripsiLaporan").innerText=data.deskripsi||"-";
+                        document.getElementById("alamatLaporan").innerText=data.alamat_kejadian||"-";
+                        const foto = document.getElementById("fotoBukti");
+                        if (data.foto_bukti){
+                            foto.src="data:image/jpeg;base64," + data.foto_bukti;
+                        }else{
+                            foto.src="images/no-image.png";
+                        }
+                        //reset step
+                        document.querySelectorAll(".step-v").forEach(s => {
+                            s.classList.remove("active");
+                        });
+                        //Tombol Laporan Hidden
+                        document.getElementById("btnLaporan").style.display="none";
+                        let status = (data.status || "").toLowerCase();
+                        //Step1 Always On
+                        document.getElementById("step1").classList.add("active");
+                    if(status === "diproses"){
+                        document.getElementById("step2").classList.add("active");
+                    }
+                    else if(status === "ditangani"){
+                        document.getElementById("step2").classList.add("active");
+                        document.getElementById("step3").classList.add("active");
+                    }
+                    else if(status === "selesai"){
+                        document.getElementById("step1").classList.add("active");
+                        document.getElementById("step2").classList.add("active");
+                        document.getElementById("step3").classList.add("active");
+                        document.getElementById("step4").classList.add("active");
+                        document.getElementById("btnLaporan").style.display="block";
+                    }
+            })
+                    .catch(err => {
+                        console.error(err);
+                        console.error(err);
+                        alert("EORROR:" + err.message);
+            });
+        }
+        </script>
         
-        <h2>Hasil</h2>
-        <p>Kode : EMR-0001</p>
-        <p>Status : Diproses</p>
+        <script>
+            function lihatLaporan(){
+                window.location.href="Lihat_Laporan.html?kode=" + encodeURIComponent(
+                        document.getElementById("kodeHasil").innerText);
+            }
+        </script>
+        
+        <script>
+            window.onload = function(){
+                const kode = localStorage.getItem("kode_pengaduan");
+                if(kode){
+                    document.getElementById("kode").value = kode;
+                        cariStatus();
+                    localStorage.removeItem("kode_pengaduan");
+                }
+            };   
+        </script>
     </body>
 </html>
