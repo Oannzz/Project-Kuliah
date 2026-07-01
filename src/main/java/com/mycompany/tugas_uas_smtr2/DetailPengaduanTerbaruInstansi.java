@@ -4,6 +4,8 @@
  */
 package com.mycompany.tugas_uas_smtr2;
 
+import com.mycompany.tugas_uas_smtr2.DasborInstansi1;
+import com.mycompany.tugas_uas_smtr2.Util;
 import com.mycompany.tugas_uas_smtr2.Util;
 import com.mycompany.tugas_uas_smtr2.Util;
 import com.mycompany.tugas_uas_smtr2.dbconnectionsistem;
@@ -78,7 +80,11 @@ public class DetailPengaduanTerbaruInstansi extends javax.swing.JFrame {
 
                 if (base64Data != null && base64Data.startsWith("data:image")) {
                     String base64 = base64Data.substring(base64Data.indexOf(",") + 1);
-                    byte[] imageBytes = java.util.Base64.getDecoder().decode(base64);
+                    int embeddedDataUrl = base64.indexOf("data:");
+                    if (embeddedDataUrl > 0) {
+                        base64 = base64.substring(0, embeddedDataUrl);
+                    }
+                    byte[] imageBytes = java.util.Base64.getMimeDecoder().decode(base64);
                     java.awt.image.BufferedImage img = javax.imageio.ImageIO.read(
                             new java.io.ByteArrayInputStream(imageBytes)
                     );
@@ -139,7 +145,35 @@ public class DetailPengaduanTerbaruInstansi extends javax.swing.JFrame {
         jLabel9.setText("Shift: " + shift);
     }
     
+    public void updateStatusDitangani(String kodePengaduan) {
+    // Menggunakan URL koneksi manual mandiri sesuai database Anda
+    String url = "jdbc:mysql://localhost:3306/silandak";
     
+    try (java.sql.Connection conn = java.sql.DriverManager.getConnection(url, "root", "")) {
+        
+        // Query SQL untuk mengubah status pengaduan
+        String sql = "UPDATE form_pengaduan SET status = ? WHERE kode_pengaduan = ?";
+        java.sql.PreparedStatement ps = conn.prepareStatement(sql);
+        
+        ps.setString(1, "ditangani");
+        ps.setString(2, kodePengaduan);
+        
+        int barisTerupdate = ps.executeUpdate();
+        
+        if (barisTerupdate > 0) {
+            javax.swing.JOptionPane.showMessageDialog(this, 
+                    "Berhasil! Status pengaduan " + kodePengaduan + " kini menjadi Ditangani.");
+            // Tidak ada syntax dispose() atau pindah halaman di sini, user tetap berada di form ini
+        } else {
+            javax.swing.JOptionPane.showMessageDialog(this, "Gagal memperbarui status. Kode pengaduan tidak ditemukan.");
+        }
+        
+        ps.close();
+    } catch (Exception e) {
+        e.printStackTrace();
+        javax.swing.JOptionPane.showMessageDialog(this, "Error Database: " + e.getMessage());
+    }
+}
     
     
     
@@ -165,7 +199,7 @@ public class DetailPengaduanTerbaruInstansi extends javax.swing.JFrame {
         jScrollPane2 = new javax.swing.JScrollPane();
         area_alamat = new javax.swing.JTextArea();
         lbl_maps = new javax.swing.JLabel();
-        jButton3 = new javax.swing.JButton();
+        btn_buat = new javax.swing.JButton();
         jLabel10 = new javax.swing.JLabel();
         field_kode = new javax.swing.JTextField();
         field_tgl = new javax.swing.JTextField();
@@ -173,6 +207,7 @@ public class DetailPengaduanTerbaruInstansi extends javax.swing.JFrame {
         jButton1 = new javax.swing.JButton();
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
+        btn_respon = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setMinimumSize(new java.awt.Dimension(1920, 1080));
@@ -276,9 +311,9 @@ public class DetailPengaduanTerbaruInstansi extends javax.swing.JFrame {
                 .addGap(35, 35, 35))
         );
 
-        jButton3.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
-        jButton3.setText("Buat Laporan");
-        jButton3.addActionListener(this::jButton3ActionPerformed);
+        btn_buat.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
+        btn_buat.setText("Buat Laporan");
+        btn_buat.addActionListener(this::btn_buatActionPerformed);
 
         jLabel10.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
         jLabel10.setText("Bukti");
@@ -327,6 +362,10 @@ public class DetailPengaduanTerbaruInstansi extends javax.swing.JFrame {
                 .addContainerGap(39, Short.MAX_VALUE))
         );
 
+        btn_respon.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
+        btn_respon.setText("Respon Pengaduan");
+        btn_respon.addActionListener(this::btn_responActionPerformed);
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -334,9 +373,6 @@ public class DetailPengaduanTerbaruInstansi extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(97, 97, 97)
-                        .addComponent(jButton3))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addContainerGap(11, Short.MAX_VALUE)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(field_kode, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -345,15 +381,21 @@ public class DetailPengaduanTerbaruInstansi extends javax.swing.JFrame {
                                     .addComponent(jLabel4)
                                     .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                     .addComponent(field_tgl, javax.swing.GroupLayout.PREFERRED_SIZE, 210, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 860, javax.swing.GroupLayout.PREFERRED_SIZE)))))
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 860, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(243, 243, 243)
+                                .addComponent(jLabel10))
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(68, 68, 68)
+                                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 63, Short.MAX_VALUE))
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(243, 243, 243)
-                        .addComponent(jLabel10))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(68, 68, 68)
-                        .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 63, Short.MAX_VALUE)
+                        .addGap(99, 99, 99)
+                        .addComponent(btn_buat)
+                        .addGap(297, 297, 297)
+                        .addComponent(btn_respon)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                 .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(125, 125, 125))
             .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -364,7 +406,7 @@ public class DetailPengaduanTerbaruInstansi extends javax.swing.JFrame {
                 .addContainerGap()
                 .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 123, Short.MAX_VALUE)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(field_kode, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(7, 7, 7)
@@ -380,8 +422,10 @@ public class DetailPengaduanTerbaruInstansi extends javax.swing.JFrame {
                                 .addGap(50, 50, 50)
                                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(159, 159, 159))
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(btn_respon, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(btn_buat, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(144, 144, 144))
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(26, 26, 26))))
@@ -398,7 +442,7 @@ public class DetailPengaduanTerbaruInstansi extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_field_tglActionPerformed
 
-    private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
+    private void btn_buatActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_buatActionPerformed
         //// 1. Buat objek dari class halaman tujuan yang ingin dibuka
         String kodePengaduanData = field_kode.getText();
         String deskripsiData = area_detail.getText();
@@ -418,7 +462,7 @@ public class DetailPengaduanTerbaruInstansi extends javax.swing.JFrame {
 // 3. Tutup dan hancurkan (close/destroy) halaman yang sekarang sedang aktif
     this.dispose();
         
-    }//GEN-LAST:event_jButton3ActionPerformed
+    }//GEN-LAST:event_btn_buatActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         // TODO add your handling code here:
@@ -437,6 +481,28 @@ public class DetailPengaduanTerbaruInstansi extends javax.swing.JFrame {
             currentLat, currentLng)
     );
     }//GEN-LAST:event_btn_lihat_lokasiActionPerformed
+
+    private void btn_responActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_responActionPerformed
+        // TODO add your handling code here:
+                                                 
+    // Mengambil nilai kode pengaduan langsung dari field_kode di layar
+    String kodePengaduan = field_kode.getText().trim();
+    
+    if (!kodePengaduan.isEmpty()) {
+        // Tampilkan dialog konfirmasi tindakan
+        int konfirmasi = javax.swing.JOptionPane.showConfirmDialog(this, 
+                "Apakah Anda yakin ingin merespon dan menangani pengaduan dengan kode: " + kodePengaduan + "?", 
+                "Konfirmasi Tindakan", javax.swing.JOptionPane.YES_NO_OPTION);
+                
+        if (konfirmasi == javax.swing.JOptionPane.YES_OPTION) {
+            // Jalankan fungsi update status
+            updateStatusDitangani(kodePengaduan);
+        }
+    } else {
+        javax.swing.JOptionPane.showMessageDialog(this, "Kode pengaduan tidak ditemukan atau kosong!");
+    }
+
+    }//GEN-LAST:event_btn_responActionPerformed
 
     /**
      * @param args the command line arguments
@@ -466,11 +532,12 @@ public class DetailPengaduanTerbaruInstansi extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JTextArea area_alamat;
     private javax.swing.JTextArea area_detail;
+    private javax.swing.JButton btn_buat;
     private javax.swing.JButton btn_lihat_lokasi;
+    private javax.swing.JButton btn_respon;
     private javax.swing.JTextField field_kode;
     private javax.swing.JTextField field_tgl;
     private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton3;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel2;

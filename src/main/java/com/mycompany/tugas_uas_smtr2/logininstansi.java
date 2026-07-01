@@ -6,8 +6,11 @@ package com.mycompany.tugas_uas_smtr2;
 
 import com.mycompany.tugas_uas_smtr2.DasborInstansi1;
 import com.mycompany.tugas_uas_smtr2.DasborInstansi1;
-import com.mycompany.tugas_uas_smtr2.RegisterInstansi;
-import com.mycompany.tugas_uas_smtr2.RegisterInstansi;
+import com.mycompany.tugas_uas_smtr2.DasborInstansi1;
+import com.mycompany.tugas_uas_smtr2.RegisterOperator;
+import com.mycompany.tugas_uas_smtr2.RegisterOperator;
+import com.mycompany.tugas_uas_smtr2.RegisterOperator;
+import com.mycompany.tugas_uas_smtr2.dbconnectionsistem;
 import com.mycompany.tugas_uas_smtr2.dbconnectionsistem;
 import com.mycompany.tugas_uas_smtr2.dbconnectionsistem;
 import java.sql.Connection;
@@ -204,7 +207,7 @@ public class logininstansi extends javax.swing.JFrame {
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
         // TODO add your handling code here:
-        RegisterInstansi masuk = new RegisterInstansi();
+        RegisterOperator masuk = new RegisterOperator();
         masuk.setVisible(true);
         this.dispose();
     }//GEN-LAST:event_jButton2ActionPerformed
