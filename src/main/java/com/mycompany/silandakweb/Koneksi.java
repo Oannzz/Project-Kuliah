@@ -9,7 +9,7 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 
 public class Koneksi {
-    private static final String URL = "jdbc:mysql://localhost:3306/silandak1?useSSL=false&serverTimezone=UTC";
+    private static final String URL = "jdbc:mysql://localhost:3306/silandak?useSSL=false&serverTimezone=UTC";
     private static final String USER = "root"; // Sesuaikan dengan username MySQL Anda
     private static final String PASSWORD = ""; // Sesuaikan dengan password MySQL Anda
 
