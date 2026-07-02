@@ -314,6 +314,15 @@
                             </div>
                         </div>
                     </div>
+                    <div id="statusDitolak"
+                         style="display:none; text-align:center; margin-top:30px;">
+                             <i class="fa-solid fa-circle-xmark"
+                                style="font-size:90px;
+                                color:red;"></i>
+                        <h2 style="color:red;
+                            margin-top: 15px;">PENGADUAN DITOLAK</h2>
+                            <p id="alasanDitolak"></p>
+                    </div>
                     <button id="btnLaporan"
                             style="margin-top: 20px;
                             display: none;"
@@ -373,6 +382,9 @@
                         //Tombol Laporan Hidden
                         document.getElementById("btnLaporan").style.display="none";
                         let status = (data.status || "").toLowerCase();
+                        //reset tampilan ditolak
+                        document.getElementById("statusDitolak").style.display="none";
+                        document.querySelector(".timeline-vertical").style.display="flex";
                         //Step1 Always On
                         document.getElementById("step1").classList.add("active");
                     if(status === "diproses"){
@@ -388,6 +400,11 @@
                         document.getElementById("step3").classList.add("active");
                         document.getElementById("step4").classList.add("active");
                         document.getElementById("btnLaporan").style.display="block";
+                    }
+                    else if(status === "ditolak"){
+                        document.querySelector(".timeline-vertical").style.display = "none";
+                        document.getElementById("statusDitolak").style.display="block";
+                        document.getElementById("alasanDitolak").innerText=data.alasan_penolakan || "Pengaduan Ditolak Oleh Petugas.";
                     }
             })
                     .catch(err => {
