@@ -4,7 +4,6 @@
  */
 package com.mycompany.tugas_uas_smtr2;
 
-import com.mycompany.tugas_uas_smtr2.C1hal_login_operator;
 
 /**
  *
@@ -142,9 +141,7 @@ public class dasborutama_2login extends javax.swing.JFrame {
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         // TODO add your handling code here:
-        C1hal_login_operator masuk = new C1hal_login_operator();
-        masuk.setVisible(true);
-        this.dispose();
+
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
